@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/screens/OptionsScreen.cs" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+margin_left = 486.0
+margin_top = 281.0
+margin_right = 537.0
+margin_bottom = 319.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterContainer/HBoxContainer"]
+margin_right = 51.0
+margin_bottom = 14.0
+text = "Options"
+align = 1
+valign = 1
+
+[node name="Back" type="Button" parent="CenterContainer/HBoxContainer"]
+margin_top = 18.0
+margin_right = 51.0
+margin_bottom = 38.0
+text = "Back"

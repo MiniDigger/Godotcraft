@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Godotcraft", "Godotcraft.csproj", "{2020A1C7-14CE-470D-A7F7-C823B9DA682D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	Release|Any CPU = Release|Any CPU
+	Tools|Any CPU = Tools|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Tools|Any CPU.ActiveCfg = Tools|Any CPU
+		{2020A1C7-14CE-470D-A7F7-C823B9DA682D}.Tools|Any CPU.Build.0 = Tools|Any CPU
+	EndGlobalSection
+EndGlobal

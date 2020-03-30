@@ -8,6 +8,7 @@ namespace Godotcraft.scripts.network.protocol {
 /// <summary>
 /// Handle data types encoding / decoding
 /// </summary>
+/// Borrowed from https://github.com/ORelio/Minecraft-Console-Client/blob/master/MinecraftClient/Protocol/Handlers/DataTypes.cs licenced under CDDL-1.0 https://opensource.org/licenses/CDDL-1.0
 public class DataTypes {
 	/// <summary>
 	/// Protocol version for adjusting data types
@@ -257,7 +258,7 @@ public class DataTypes {
 
 		return i;
 	}
-	
+
 	public int ReadNextVarIntFromStream(StreamPeerTCP stream) {
 		int i = 0;
 		int j = 0;
@@ -271,7 +272,7 @@ public class DataTypes {
 
 		return i;
 	}
-	
+
 	/// <summary>
 	/// Read an "extended short", which is actually an int of some kind, from the cache of bytes.
 	/// This is only done with forge.  It looks like it's a normal short, except that if the high

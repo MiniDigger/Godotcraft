@@ -9,11 +9,11 @@ public class MinecraftClient : Node {
 
 	private StreamPeerTCP client;
 
-	private Queue<Packet> packetQueue = new Queue<Packet>();
+	private readonly Queue<Packet> packetQueue = new Queue<Packet>();
 
 	private PacketState currentState = PacketState.HANDSHAKING;
 
-	private Dictionary<PacketType, List<object>> packetListeners = new Dictionary<PacketType, List<object>>();
+	private readonly Dictionary<PacketType, List<object>> packetListeners = new Dictionary<PacketType, List<object>>();
 
 	public override void _Ready() {
 		client = new StreamPeerTCP();
@@ -23,6 +23,7 @@ public class MinecraftClient : Node {
 	}
 
 	public Error connect(String host, int port) {
+		SetProcess(true);
 		return client.ConnectToHost(host, port);
 	}
 
@@ -36,6 +37,7 @@ public class MinecraftClient : Node {
 
 	public override void _Process(float delta) {
 		if (!client.IsConnectedToHost()) {
+			SetProcess(false);
 			return;
 		}
 
@@ -43,7 +45,6 @@ public class MinecraftClient : Node {
 		while (client.GetAvailableBytes() > 0) {
 			// read len
 			int len = dataTypes.ReadNextVarIntFromStream(client);
-			GD.Print("Packet len " + len);
 			if (len == 0) {
 				GD.Print("Got zero length packet");
 			}
@@ -75,7 +76,6 @@ public class MinecraftClient : Node {
 	}
 
 	private void sendPacketInternal(Packet packet) {
-		GD.Print("Sending packet with id " + packet.type);
 		byte[] packetId = dataTypes.GetVarInt(packet.type.Id);
 		byte[] data = packet.write(dataTypes);
 		byte[] len = dataTypes.GetVarInt(dataTypes.ConcatBytes(packetId, data).Length);
@@ -100,13 +100,12 @@ public class MinecraftClient : Node {
 		// read id
 		int packetId = dataTypes.ReadNextVarInt(data);
 		// handle packet
-		GD.Print("Packet ID " + packetId);
 		PacketType type;
 		try {
 			type = PacketType.of(packetId, currentState, PacketDirection.TO_CLIENT);
 		}
 		catch (KeyNotFoundException e) {
-			GD.Print("Coulnt find a packet type for id " + packetId + " and state " + currentState);
+			GD.Print($"Coulnt find a packet type for id 0x{packetId:X} and state #{currentState}");
 			return null;
 		}
 

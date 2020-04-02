@@ -4,6 +4,8 @@ using Godotcraft.scripts.network.protocol;
 using Godotcraft.scripts.network.protocol.handshake;
 using Godotcraft.scripts.network.protocol.login.client;
 using Godotcraft.scripts.network.protocol.login.server;
+using Godotcraft.scripts.network.protocol.play.client;
+using Godotcraft.scripts.network.protocol.play.server;
 using Godotcraft.scripts.network.protocol.status.client;
 using Godotcraft.scripts.network.protocol.status.server;
 using Godotcraft.scripts.state;
@@ -66,7 +68,7 @@ public class ServerListScreen : Control {
 		minecraftClient.sendPacket(new PingPacket());
 
 		minecraftClient.addPacketListener<StatusResponsePacket>(packet => {
-			GD.Print("got status response " + packet.response);
+			GD.Print("got status response " + packet.response.version + " " + packet.response.players);
 			minecraftClient.disconnect();
 		});
 
@@ -97,6 +99,17 @@ public class ServerListScreen : Control {
 			minecraftClient.switchState(PacketState.PLAY);
 			// brand?
 			minecraftClient.sendPacket(new ClientSettingsPacket("en_US", 8, 0, true, 0b11111111, 1));
+			minecraftClient.sendPacket(new ChatMessageClientPacket("Hello world!"));
+		});
+		
+		minecraftClient.addPacketListener<KeepAliveServerPacket>(packet => {
+			minecraftClient.sendPacket(new KeepAliveClientPacket(packet.id));
+		});
+		minecraftClient.addPacketListener<ChunkDataPacket>(packet => {
+			// ignore
+		});
+		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => {
+			GD.Print("Got message " + packet.message);
 		});
 	}
 

@@ -90,18 +90,27 @@ public class ServerListScreen : Control {
 	public void joinServer(String name, HBoxContainer container) {
 		GD.Print("serverClick " + name);
 		MinecraftClient minecraftClient = SingletonHandler.instance.client;
+		minecraftClient.clearPacketListeners();
 		Error status = minecraftClient.connect("localhost", 25565);
 		GD.Print("Connected with status: " + status);
 		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.LOGIN));
 		minecraftClient.switchState(PacketState.LOGIN);
-		minecraftClient.sendPacket(new LoginStartPacket("MiniDigger"));
+		minecraftClient.sendPacket(new LoginStartPacket("MiniDiggerTest"));
 		minecraftClient.addPacketListener<LoginSuccessPacket>(packet => {
 			minecraftClient.switchState(PacketState.PLAY);
 			// brand?
 			minecraftClient.sendPacket(new ClientSettingsPacket("en_US", 8, 0, true, 0b11111111, 1));
-			minecraftClient.sendPacket(new ChatMessageClientPacket("Hello world!"));
+			// minecraftClient.sendPacket(new ChatMessageClientPacket("Hello world!"));
 		});
 		
+		minecraftClient.addPacketListener<LoginDisconnectPacket>(packet => {
+			GD.Print("Kicked: " + packet.reason);
+			minecraftClient.disconnect();
+		});
+		minecraftClient.addPacketListener<SetCompressionPacket>(packet => {
+			GD.Print("Got compression request " + packet.threshold);
+			minecraftClient.compressionThreshold = packet.threshold;
+		});
 		minecraftClient.addPacketListener<KeepAliveServerPacket>(packet => {
 			minecraftClient.sendPacket(new KeepAliveClientPacket(packet.id));
 		});

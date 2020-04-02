@@ -29,10 +29,14 @@ public struct PacketType {
 
 		public struct Login {
 			private static readonly PacketState state = PacketState.LOGIN;
+			public static readonly PacketType disconnect = new PacketType(0x00, state, dir, typeof(LoginDisconnectPacket));
 			public static readonly PacketType loginSuccess = new PacketType(0x02, state, dir, typeof(LoginSuccessPacket));
+			public static readonly PacketType setCompression = new PacketType(0x03, state, dir, typeof(SetCompressionPacket));
 
 			public static void init() {
+				add(disconnect);
 				add(loginSuccess);
+				add(setCompression);
 			}
 		}
 

@@ -60,7 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="scripts\network\protocol\login\client\ClientSettingsPacket.cs" />
     <Compile Include="scripts\network\protocol\login\client\LoginStartPacket.cs" />
+    <Compile Include="scripts\network\protocol\login\server\LoginDisconnectPacket.cs" />
     <Compile Include="scripts\network\protocol\login\server\LoginSuccessPacket.cs" />
+    <Compile Include="scripts\network\protocol\login\server\SetCompressionPacket.cs" />
     <Compile Include="scripts\network\protocol\MinecraftClient.cs" />
     <Compile Include="scripts\network\protocol\DataTypes.cs" />
     <Compile Include="scripts\network\protocol\handshake\HandshakePacket.cs" />

@@ -15,8 +15,12 @@ public class MinecraftClient : Node {
 
 	private readonly Dictionary<PacketType, List<object>> packetListeners = new Dictionary<PacketType, List<object>>();
 
+	public int compressionThreshold { get; set; }
+
 	public override void _Ready() {
 		client = new StreamPeerTCP();
+
+		compressionThreshold = -1;
 
 		// force init
 		PacketType.init();
@@ -25,6 +29,10 @@ public class MinecraftClient : Node {
 	public Error connect(String host, int port) {
 		SetProcess(true);
 		return client.ConnectToHost(host, port);
+	}
+
+	public void clearPacketListeners() {
+		packetListeners.Clear();
 	}
 
 	public void disconnect() {
@@ -78,10 +86,36 @@ public class MinecraftClient : Node {
 	private void sendPacketInternal(Packet packet) {
 		byte[] packetId = dataTypes.GetVarInt(packet.type.Id);
 		byte[] data = packet.write(dataTypes);
-		byte[] len = dataTypes.GetVarInt(dataTypes.ConcatBytes(packetId, data).Length);
 
-		foreach (byte b in len) {
-			client.PutU8(b);
+
+		int dataLength = dataTypes.ConcatBytes(packetId, data).Length;
+		byte[] dataLen = dataTypes.GetVarInt(dataLength);
+
+		GD.Print($"Sending packet {packet} with len {dataLen}");
+
+		// TODO compression
+		if (compressionThreshold != -1) {
+			int packetLength = dataTypes.ConcatBytes(dataLen, packetId, data).Length;
+			byte[] packetLen = dataTypes.GetVarInt(packetLength);
+
+			foreach (byte b in packetLen) {
+				client.PutU8(b);
+			}
+
+			if (dataLength >= compressionThreshold) {
+				foreach (byte b in dataLen) {
+					client.PutU8(b);
+				}
+				GD.Print("Need to send packet compressed!");
+			}
+			else {
+				client.PutU8(0);
+			}
+		}
+		else {
+			foreach (byte b in dataLen) {
+				client.PutU8(b);
+			}
 		}
 
 		foreach (byte b in packetId) {
@@ -97,15 +131,27 @@ public class MinecraftClient : Node {
 		// read data
 		byte[] temp = client.GetData(len)[1] as byte[];
 		List<byte> data = temp?.ToList();
+
+		// compression is compressed, lets see if the packet was actually compressed
+		if (compressionThreshold != -1) {
+			int dataLength = dataTypes.ReadNextVarInt(data);
+			if (dataLength != 0) {
+				// packet is compressed, lets decompress
+				GD.Print("packet is compressed :/");
+				return null;
+			}
+		}
+
 		// read id
 		int packetId = dataTypes.ReadNextVarInt(data);
+		// GD.Print($"Got packet with id 0x{packetId:X} and state {currentState}, len is {len}");
 		// handle packet
 		PacketType type;
 		try {
 			type = PacketType.of(packetId, currentState, PacketDirection.TO_CLIENT);
 		}
 		catch (KeyNotFoundException e) {
-			GD.Print($"Coulnt find a packet type for id 0x{packetId:X} and state #{currentState}");
+			GD.Print($"Coulnt find a packet type for id 0x{packetId:X} and state {currentState}");
 			return null;
 		}
 
@@ -121,10 +167,12 @@ public class MinecraftClient : Node {
 
 	public void addPacketListener<T>(Action<T> action) where T : Packet {
 		PacketType type = PacketType.of(typeof(T));
-		GD.Print("registering packet listener for type " + type);
+		// GD.Print("registering packet listener for type " + type);
 		List<object> listeners = packetListeners.ContainsKey(type) ? packetListeners[type] : new List<object>();
 		listeners.Add(action);
-		packetListeners.Add(type, listeners);
+		if (!packetListeners.ContainsKey(type)) {
+			packetListeners.Add(type, listeners);
+		}
 	}
 }
 }

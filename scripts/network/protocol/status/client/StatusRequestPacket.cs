@@ -2,7 +2,7 @@
 
 namespace Godotcraft.scripts.network.protocol.status.client {
 public class StatusRequestPacket : Packet {
-	public StatusRequestPacket() : base(0, PacketState.STATUS, PacketDirection.TO_SERVER) { }
+	public StatusRequestPacket() : base(PacketType.ToServer.Status.statusRequest) { }
 
 	public override void read(DataTypes dataTypes, List<byte> data) { }
 

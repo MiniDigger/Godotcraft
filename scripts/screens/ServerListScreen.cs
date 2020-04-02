@@ -3,6 +3,8 @@ using Godot;
 using Godotcraft.scripts.network.protocol;
 using Godotcraft.scripts.network.protocol.handshake;
 using Godotcraft.scripts.network.protocol.status.client;
+using Godotcraft.scripts.state;
+using Array = Godot.Collections.Array;
 
 namespace Godotcraft.scripts.screens {
 public class ServerListScreen : Control {
@@ -42,27 +44,40 @@ public class ServerListScreen : Control {
 		hBoxContainer.AddChild(icon);
 		hBoxContainer.AddChild(label);
 		serverList.AddChild(hBoxContainer);
+
+		hBoxContainer.Connect("gui_input", this, nameof(serverInput), new Array {name, hBoxContainer});
+
+		Server server = new Server(name, current, max, motd1 + "\n" + motd2);
+		SingletonHandler.instance.serverManager.addServer(server);
 	}
 
 	public void onAdd() {
-		StreamPeerTCP stream = new StreamPeerTCP();
-		Error status = stream.ConnectToHost("localhost", 25565);
+		MinecraftClient minecraftClient = SingletonHandler.instance.client;
+		Error status = minecraftClient.connect("localhost", 25565);
 		GD.Print("Connected with status: " + status);
-		status = Util.writePacket(new HandshakePacket(578, "localhost", 25565, PacketState.STATUS), stream);
-		GD.Print("Written with status: " + status);
-		status = Util.writePacket(new StatusRequestPacket(), stream);
-		GD.Print("Written with status: " + status);
-		status = Util.writePacket(new PingPacket(), stream);
-		GD.Print("Written with status: " + status);
+		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.STATUS));
+		minecraftClient.sendPacket(new StatusRequestPacket());
+		minecraftClient.sendPacket(new PingPacket());
 
-		Util.readPacket(stream);
-		Util.readPacket(stream);
+		// minecraftClient.addPacketListener(PacketType.ToClient.Status.statusResponse);
 
-		addServer("Test", "Motd1", "Motd2", 0, 10);
-		addServer("Test", "Motd1", "Motd2", 0, 10);
-		addServer("Test", "Motd1", "Motd2", 0, 10);
-		addServer("Test", "Motd1", "Motd2", 0, 10);
-		addServer("Test", "Motd1", "Motd2", 0, 10);
+		addServer("Test1", "Motd1", "Motd2", 0, 10);
+		addServer("Test2", "Motd1", "Motd2", 0, 10);
+		addServer("Test3", "Motd1", "Motd2", 0, 10);
+		addServer("Test4", "Motd1", "Motd2", 0, 10);
+		addServer("Test5", "Motd1", "Motd2", 0, 10);
+	}
+
+	public void serverInput(InputEvent @event, String name, HBoxContainer container) {
+		if (@event is InputEventMouseButton mouseEvent) {
+			if (mouseEvent.Pressed) {
+				joinServer(name, container);
+			}
+		}
+	}
+
+	public void joinServer(String name, HBoxContainer container) {
+		GD.Print("serverClick " + name);
 	}
 
 	public void onBack() {

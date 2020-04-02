@@ -5,7 +5,7 @@ public class PingPacket : Packet {
 
 	private long payload { get; }
 
-	public PingPacket() : base(1, PacketState.STATUS, PacketDirection.TO_SERVER) {
+	public PingPacket() : base(PacketType.ToServer.Status.ping) {
 		payload = 1337;
 	}
 	public override void read(DataTypes dataTypes, List<byte> data) {

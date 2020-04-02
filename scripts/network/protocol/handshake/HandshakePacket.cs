@@ -8,15 +8,15 @@ public class HandshakePacket : Packet {
 	private ushort serverPort { get; }
 	private PacketState nextState { get; }
 
-	public HandshakePacket(int protocolVersion, string serverAddress, ushort serverPort, PacketState nextState) : base(
-		0, PacketState.HANDSHAKING, PacketDirection.TO_SERVER) {
+	public HandshakePacket(int protocolVersion, string serverAddress, ushort serverPort, PacketState nextState) : base(PacketType.ToServer.Handshake
+		.handshake) {
 		this.protocolVersion = protocolVersion;
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
 		this.nextState = nextState;
 	}
 
-	public HandshakePacket() : base(0, PacketState.HANDSHAKING, PacketDirection.TO_SERVER) { }
+	public HandshakePacket() : base(PacketType.ToServer.Handshake.handshake) { }
 
 	public override void read(DataTypes dataTypes, List<byte> data) {
 		throw new NotImplementedException();

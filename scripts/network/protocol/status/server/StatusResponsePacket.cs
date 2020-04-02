@@ -5,7 +5,7 @@ namespace Godotcraft.scripts.network.protocol.status.server {
 public class StatusResponsePacket : Packet {
 	private String content { get; set; }
 
-	public StatusResponsePacket() : base(0, PacketState.STATUS, PacketDirection.TO_CLIENT) { }
+	public StatusResponsePacket() : base(PacketType.ToClient.Status.statusResponse) { }
 
 	public override void read(DataTypes dataTypes, List<byte> data) {
 		content = dataTypes.ReadNextString(data);

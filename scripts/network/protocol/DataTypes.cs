@@ -720,6 +720,14 @@ public class DataTypes {
 	//     return slotData.ToArray();
 	// }
 
+	public byte[] GetByte(byte b) {
+		return new[] {b};
+	}
+
+	public byte[] GetBool(bool b) {
+		return new[] {(byte) (b ? 0x00 : 0x01)};
+	}
+
 	/// <summary>
 	/// Easily append several byte arrays
 	/// </summary>

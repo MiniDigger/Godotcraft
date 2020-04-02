@@ -3,7 +3,7 @@
 namespace Godotcraft.scripts.network.protocol.status.client {
 public class PingPacket : Packet {
 
-	private long payload { get; }
+	public long payload { get; private set; }
 
 	public PingPacket() : base(PacketType.ToServer.Status.ping) {
 		payload = 1337;

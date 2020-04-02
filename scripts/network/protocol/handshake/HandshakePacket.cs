@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Godotcraft.scripts.network.protocol.handshake {
 public class HandshakePacket : Packet {
-	private int protocolVersion { get; }
-	private String serverAddress { get; }
-	private ushort serverPort { get; }
-	private PacketState nextState { get; }
+	public int protocolVersion { get; private set; }
+	public String serverAddress { get; private set; }
+	public ushort serverPort { get; private set; }
+	public PacketState nextState { get; private set; }
 
 	public HandshakePacket(int protocolVersion, string serverAddress, ushort serverPort, PacketState nextState) : base(PacketType.ToServer.Handshake
 		.handshake) {

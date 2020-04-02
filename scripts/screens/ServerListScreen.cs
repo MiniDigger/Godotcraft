@@ -2,8 +2,13 @@ using System;
 using Godot;
 using Godotcraft.scripts.network.protocol;
 using Godotcraft.scripts.network.protocol.handshake;
+using Godotcraft.scripts.network.protocol.login.client;
+using Godotcraft.scripts.network.protocol.login.server;
 using Godotcraft.scripts.network.protocol.status.client;
+using Godotcraft.scripts.network.protocol.status.server;
 using Godotcraft.scripts.state;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Array = Godot.Collections.Array;
 
 namespace Godotcraft.scripts.screens {
@@ -56,10 +61,14 @@ public class ServerListScreen : Control {
 		Error status = minecraftClient.connect("localhost", 25565);
 		GD.Print("Connected with status: " + status);
 		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.STATUS));
+		minecraftClient.switchState(PacketState.STATUS);
 		minecraftClient.sendPacket(new StatusRequestPacket());
 		minecraftClient.sendPacket(new PingPacket());
 
-		// minecraftClient.addPacketListener(PacketType.ToClient.Status.statusResponse);
+		minecraftClient.addPacketListener<StatusResponsePacket>(packet => {
+			GD.Print("got status response " + packet.response);
+			minecraftClient.disconnect();
+		});
 
 		addServer("Test1", "Motd1", "Motd2", 0, 10);
 		addServer("Test2", "Motd1", "Motd2", 0, 10);
@@ -78,6 +87,17 @@ public class ServerListScreen : Control {
 
 	public void joinServer(String name, HBoxContainer container) {
 		GD.Print("serverClick " + name);
+		MinecraftClient minecraftClient = SingletonHandler.instance.client;
+		Error status = minecraftClient.connect("localhost", 25565);
+		GD.Print("Connected with status: " + status);
+		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.LOGIN));
+		minecraftClient.switchState(PacketState.LOGIN);
+		minecraftClient.sendPacket(new LoginStartPacket("MiniDigger"));
+		minecraftClient.addPacketListener<LoginSuccessPacket>(packet => {
+			minecraftClient.switchState(PacketState.PLAY);
+			// brand?
+			minecraftClient.sendPacket(new ClientSettingsPacket("en_US", 8, 0, true, 0b11111111, 1));
+		});
 	}
 
 	public void onBack() {

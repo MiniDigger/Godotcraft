@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Godot;
+using Godotcraft.scripts.network.protocol.login.client;
+using Godotcraft.scripts.network.protocol.login.server;
 using Godotcraft.scripts.network.protocol.status.client;
 using Godotcraft.scripts.network.protocol.status.server;
 using Godotcraft.scripts.state;
@@ -24,7 +27,11 @@ public struct PacketType {
 
 		public struct Login {
 			private static readonly PacketState state = PacketState.LOGIN;
-			public static void init() { }
+			public static readonly PacketType loginSuccess = new PacketType(2, state, dir, typeof(LoginSuccessPacket));
+
+			public static void init() {
+				add(loginSuccess);
+			}
 		}
 
 		public struct Play {
@@ -64,13 +71,22 @@ public struct PacketType {
 
 		public struct Login {
 			private static readonly PacketState state = PacketState.LOGIN;
+			
+			public static readonly PacketType loginStart = new PacketType(0, state, dir, typeof(LoginStartPacket));
 
-			public static void init() { }
+			public static void init() {
+				add(loginStart);
+			}
 		}
 
 		public struct Play {
 			private static readonly PacketState state = PacketState.PLAY;
-			public static void init() { }
+			
+			public static readonly PacketType clientSettings = new PacketType(5, state, dir, typeof(ClientSettingsPacket));
+
+			public static void init() {
+				add(clientSettings);
+			}
 		}
 
 		public static void init() { 
@@ -111,9 +127,17 @@ public struct PacketType {
 	public static PacketType of(int id, PacketState state, PacketDirection direction) {
 		return types[(id, state, direction)];
 	}
+	
+	public static PacketType of(Type type) {
+		foreach (var packetType in types.Values.Where(packetType => packetType.Packet == type)) {
+			return packetType;
+		}
+
+		throw new Exception("No packet type for type " + nameof(type) + " found");
+	}
 
 	private static void add(PacketType type) {
-		GD.Print("Add " + type);
+		GD.Print("Register packet " + type);
 		types.Add((type.Id, type.State, type.Direction), type);
 	}
 }

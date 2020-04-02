@@ -3,7 +3,7 @@
 namespace Godotcraft.scripts.network.protocol.status.server {
 public class PongPacket : Packet{
 	
-	private long payload { get; set; }
+	public long payload { get; private set; }
 	
 	public PongPacket() : base(PacketType.ToClient.Status.pong) { }
 	public override void read(DataTypes dataTypes, List<byte> data) {

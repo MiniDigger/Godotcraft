@@ -26,7 +26,6 @@ SingletonHandler="*res://scripts/state/SingletonHandler.cs"
 [mono]
 
 debugger_agent/port=50000
-debugger_agent/wait_for_debugger=true
 debugger_agent/wait_timeout=10000
 
 [rendering]

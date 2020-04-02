@@ -11,6 +11,10 @@ public class MinecraftClient : Node {
 
 	private Queue<Packet> packetQueue = new Queue<Packet>();
 
+	private PacketState currentState = PacketState.HANDSHAKING;
+
+	private Dictionary<PacketType, List<object>> packetListeners = new Dictionary<PacketType, List<object>>();
+
 	public override void _Ready() {
 		client = new StreamPeerTCP();
 
@@ -54,8 +58,20 @@ public class MinecraftClient : Node {
 		}
 	}
 
-	public void handlePacket(Packet packet) {
-		GD.Print("Process packet " + packet);
+	private void handlePacket(Packet packet) {
+		if (packet == null) {
+			return;
+		}
+
+		if (!packetListeners.ContainsKey(packet.type)) {
+			GD.Print("no packet listeners for " + packet.type);
+			return;
+		}
+
+		foreach (var action in packetListeners[packet.type]
+			.Where(action => action.GetType().GetGenericArguments()[0].BaseType?.Name == nameof(Packet))) {
+			action.GetType().GetMethod("Invoke")?.Invoke(action, new object[] {packet});
+		}
 	}
 
 	private void sendPacketInternal(Packet packet) {
@@ -85,10 +101,31 @@ public class MinecraftClient : Node {
 		int packetId = dataTypes.ReadNextVarInt(data);
 		// handle packet
 		GD.Print("Packet ID " + packetId);
-		Packet packet = PacketType.of(packetId, PacketState.STATUS, PacketDirection.TO_CLIENT).instance();
+		PacketType type;
+		try {
+			type = PacketType.of(packetId, currentState, PacketDirection.TO_CLIENT);
+		}
+		catch (KeyNotFoundException e) {
+			GD.Print("Coulnt find a packet type for id " + packetId + " and state " + currentState);
+			return null;
+		}
+
+		Packet packet = type.instance();
 		packet.read(dataTypes, data);
-		GD.Print("Packet: " + packet);
 		return packet;
+	}
+
+	public void switchState(PacketState state) {
+		GD.Print("Changing state to " + state);
+		currentState = state;
+	}
+
+	public void addPacketListener<T>(Action<T> action) where T : Packet {
+		PacketType type = PacketType.of(typeof(T));
+		GD.Print("registering packet listener for type " + type);
+		List<object> listeners = packetListeners.ContainsKey(type) ? packetListeners[type] : new List<object>();
+		listeners.Add(action);
+		packetListeners.Add(type, listeners);
 	}
 }
 }

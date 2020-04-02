@@ -42,18 +42,32 @@ public struct PacketType {
 
 		public struct Play {
 			private static readonly PacketState state = PacketState.PLAY;
+			public static readonly PacketType serverDifficulty = new PacketType(0x0E, state, dir, typeof(ServerDifficultyPacket));
 			public static readonly PacketType chatMessage = new PacketType(0x0F, state, dir, typeof(ChatMessageServerPacket));
-			public static readonly PacketType playerAbilities = new PacketType(0x19, state, dir, typeof(PlayerAbilitiesPacket));
+			public static readonly PacketType setSlot = new PacketType(0x17, state, dir, typeof(SetSlotPacket));
+			public static readonly PacketType pluginMessage = new PacketType(0x19, state, dir, typeof(PluginMessageServerPacket));
+			public static readonly PacketType entityStatus = new PacketType(0x1C, state, dir, typeof(EntityStatusPacket));
 			public static readonly PacketType keepAlive = new PacketType(0x21, state, dir, typeof(KeepAliveServerPacket));
 			public static readonly PacketType chunkData = new PacketType(0x22, state, dir, typeof(ChunkDataPacket));
 			public static readonly PacketType joinGame = new PacketType(0x26, state, dir, typeof(JoinGamePacket));
+			public static readonly PacketType playerAbilities = new PacketType(0x32, state, dir, typeof(PlayerAbilitiesPacket));
+			public static readonly PacketType playerPositionAndLook = new PacketType(0x36, state, dir, typeof(PlayerPositionAndLookServerPacket));
+			public static readonly PacketType unlockRecipes = new PacketType(0x37, state, dir, typeof(UnlockRecipesPacket));
+			public static readonly PacketType heldItemChange = new PacketType(0x40, state, dir, typeof(HeldItemChangeServerPacket));
 
 			public static void init() {
+				add(serverDifficulty);
 				add(chatMessage);
-				add(playerAbilities);
+				add(setSlot);
+				add(pluginMessage);
+				add(entityStatus);
 				add(keepAlive);
 				add(chunkData);
 				add(joinGame);
+				add(playerAbilities);
+				add(playerPositionAndLook);
+				add(unlockRecipes);
+				add(heldItemChange);
 			}
 		}
 
@@ -100,13 +114,17 @@ public struct PacketType {
 		public struct Play {
 			private static readonly PacketState state = PacketState.PLAY;
 
+			public static readonly PacketType teleportConfirm = new PacketType(0x00, state, dir, typeof(TeleportConfirmPacket));
 			public static readonly PacketType chatMessage = new PacketType(0x03, state, dir, typeof(ChatMessageClientPacket));
 			public static readonly PacketType clientSettings = new PacketType(0x05, state, dir, typeof(ClientSettingsPacket));
+			public static readonly PacketType pluginMessage = new PacketType(0x0B, state, dir, typeof(PluginMessageClientPacket));
 			public static readonly PacketType keepAlive = new PacketType(0x0F, state, dir, typeof(KeepAliveClientPacket));
 
 			public static void init() {
+				add(teleportConfirm);
 				add(chatMessage);
 				add(clientSettings);
+				add(pluginMessage);
 				add(keepAlive);
 			}
 		}

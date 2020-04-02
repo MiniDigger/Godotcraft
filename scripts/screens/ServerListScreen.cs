@@ -117,8 +117,14 @@ public class ServerListScreen : Control {
 		minecraftClient.addPacketListener<ChunkDataPacket>(packet => {
 			// ignore
 		});
+		minecraftClient.addPacketListener<PlayerPositionAndLookServerPacket>(packet => {
+			minecraftClient.sendPacket(new TeleportConfirmPacket(packet.teleportId));
+		});
 		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => {
 			GD.Print("Got message " + packet.message);
+		});
+		minecraftClient.addPacketListener<PluginMessageServerPacket>(packet => {
+			GD.Print("Got plugin message in channel " + packet.channel);
 		});
 	}
 

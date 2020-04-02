@@ -73,7 +73,7 @@ public class MinecraftClient : Node {
 		}
 
 		if (!packetListeners.ContainsKey(packet.type)) {
-			GD.Print("no packet listeners for " + packet.type);
+			// GD.Print("no packet listeners for " + packet.type);
 			return;
 		}
 
@@ -91,7 +91,7 @@ public class MinecraftClient : Node {
 		int dataLength = dataTypes.ConcatBytes(packetId, data).Length;
 		byte[] dataLen = dataTypes.GetVarInt(dataLength);
 
-		GD.Print($"Sending packet {packet} with len {dataLen}");
+		GD.Print($"Sending packet {packet} with len {dataLength}");
 
 		// TODO compression
 		if (compressionThreshold != -1) {
@@ -156,7 +156,13 @@ public class MinecraftClient : Node {
 		}
 
 		Packet packet = type.instance();
-		packet.read(dataTypes, data);
+		try {
+			packet.read(dataTypes, data);
+		}
+		catch (Exception ex) {
+			GD.Print($"Error while reading packet {type}: {ex.GetType().Name}: {ex.Message}");
+		}
+		
 		return packet;
 	}
 

@@ -41,7 +41,10 @@ public class GameClient {
 		minecraftClient.addPacketListener<PlayerPositionAndLookServerPacket>(packet => {
 			minecraftClient.sendPacket(new TeleportConfirmPacket(packet.teleportId));
 		});
-		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => { GD.Print("Got message " + packet.message); });
+		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => {
+			GD.Print("Got message " + packet.message);
+			
+		});
 		minecraftClient.addPacketListener<PluginMessageServerPacket>(packet => { GD.Print("Got plugin message in channel " + packet.channel); });
 	}
 

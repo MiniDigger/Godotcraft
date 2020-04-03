@@ -22,6 +22,19 @@ config/icon="res://icon.png"
 [autoload]
 
 SingletonHandler="*res://scripts/state/SingletonHandler.cs"
+Console="*res://addons/quentincaffeino-console/src/Console.tscn"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "quentincaffeino-console" )
+
+[input]
+
+console_toggle={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":84,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [mono]
 

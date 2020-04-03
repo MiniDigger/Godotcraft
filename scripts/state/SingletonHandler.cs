@@ -12,10 +12,13 @@ public class SingletonHandler : Node {
 	
 	public GameClient gameClient { get; private set; }
 	
+	public StateHandler stateHandler { get; private set; }
+	
 	public override void _Ready() {
 		instance = this;
 		serverManager = new ServerManager();
 		gameClient = new GameClient();
+		stateHandler= new StateHandler();
 		
 		serverManager.load();
 		
@@ -33,4 +36,5 @@ public class SingletonHandler : Node {
 		RemoveChild(client);
 	}
 }
+
 }

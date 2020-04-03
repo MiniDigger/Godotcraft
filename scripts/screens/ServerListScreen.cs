@@ -115,7 +115,8 @@ public class ServerListScreen : Control {
 			return;
 		}
 
-		SingletonHandler.instance.gameClient.joinGame(server.host, server.port, "MiniDiggerTest");
+		SingletonHandler.instance.stateHandler.currentServer = server;
+		GetTree().ChangeScene("res://screens/GameScreen.tscn");
 	}
 
 	public void onBack() {

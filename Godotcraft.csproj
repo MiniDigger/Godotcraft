@@ -91,12 +91,14 @@
     <Compile Include="scripts\network\protocol\status\client\StatusRequestPacket.cs" />
     <Compile Include="scripts\network\protocol\status\server\PongPacket.cs" />
     <Compile Include="scripts\network\protocol\status\server\StatusResponsePacket.cs" />
+    <Compile Include="scripts\screens\GameScreen.cs" />
     <Compile Include="scripts\screens\MainMenu.cs" />
     <Compile Include="scripts\screens\OptionsScreen.cs" />
     <Compile Include="scripts\screens\ServerListScreen.cs" />
     <Compile Include="scripts\state\Server.cs" />
     <Compile Include="scripts\state\ServerManager.cs" />
     <Compile Include="scripts\state\SingletonHandler.cs" />
+    <Compile Include="scripts\state\StateHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

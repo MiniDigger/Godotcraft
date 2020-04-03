@@ -1,0 +1,4 @@
+[submodule "godot-console"]
+	path = addons/quentincaffeino-console
+	url = https://github.com/QuentinCaffeino/godot-console
+	branch = dev

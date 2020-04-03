@@ -16,6 +16,10 @@ using Array = Godot.Collections.Array;
 namespace Godotcraft.scripts.screens {
 public class ServerListScreen : Control {
 	private VBoxContainer serverList;
+	private PopupDialog addServerPopup;
+	private LineEdit serverName;
+	private LineEdit serverAddress;
+
 	private RandomNumberGenerator random;
 
 	public override void _Ready() {
@@ -23,28 +27,68 @@ public class ServerListScreen : Control {
 		Button backButton = GetNode("CenterContainer/VBoxContainer/ButtonBar/Back") as Button;
 		serverList = GetNode("CenterContainer/VBoxContainer/Servers") as VBoxContainer;
 
+		addServerPopup = GetNode("AddServerPopup") as PopupDialog;
+		Button popupAddButton = GetNode("AddServerPopup/HBoxContainer/ButtonBar/Add") as Button;
+		Button popupBackButton = GetNode("AddServerPopup/HBoxContainer/ButtonBar/Back") as Button;
+		serverName = GetNode("AddServerPopup/HBoxContainer/Name") as LineEdit;
+		serverAddress = GetNode("AddServerPopup/HBoxContainer/Address") as LineEdit;
+
 		addButton?.Connect("pressed", this, nameof(onAdd));
 		backButton?.Connect("pressed", this, nameof(onBack));
+		popupAddButton?.Connect("pressed", this, nameof(onPopupAdd));
+		popupBackButton?.Connect("pressed", this, nameof(onPopupBack));
 
 		random = new RandomNumberGenerator();
 		random.Randomize();
 
+		// remove visual indicators we have in editor
 		while (serverList?.GetChildCount() > 0) {
 			Node child = serverList.GetChild(0);
 			serverList.RemoveChild(child);
 			child.QueueFree();
 		}
+
+		// load servers from server manager
+		foreach (Server server in SingletonHandler.instance.serverManager.getServers()) {
+			addServer(server.name, server.host, server.port);
+		}
+	}
+
+	private void removeServer(String name) {
+		Node node = serverList.GetNode(name);
+		if (node != null) {
+			serverList.RemoveChild(node);
+		}
+	}
+
+	public void onPopupAdd() {
+		String name = serverName.Text;
+		String host = serverAddress.Text;
+		ushort port = 25565;
+		// add to serverlist
+		SingletonHandler.instance.serverManager.addServer(new Server(name, host, port));
+		// add to gui
+		addServer(name, host, port);
+	}
+
+	private void addServer(String name, String host, ushort port) {
+		// hide popup
+		addServerPopup.Hide();
+		// add dummy
+		addServer(name, "", "", -1, -1);
+		// do server list ping
+		SingletonHandler.instance.gameClient.serverListPing(host, port, response => {
+			removeServer(name);
+			// todo favicon + motd
+			addServer(name, "motd1", "motd2", response.players.online, response.players.max);
+		});
 	}
 
 	private void addServer(String name, String motd1, String motd2, int current, int max) {
-		HBoxContainer hBoxContainer = new HBoxContainer();
+		HBoxContainer hBoxContainer = new HBoxContainer {Name = name};
 		// TODO server icon
 		TextureRect icon = new TextureRect();
-		NoiseTexture texture = new NoiseTexture();
-		texture.Width = 64;
-		texture.Height = 64;
-		texture.Noise = new OpenSimplexNoise();
-		texture.Noise.Seed = (int) random.Randi();
+		NoiseTexture texture = new NoiseTexture {Width = 64, Height = 64, Noise = new OpenSimplexNoise {Seed = (int) random.Randi()}};
 		icon.Texture = texture;
 
 		Label label = new Label {Text = name + " (" + current + "/" + max + ")\n" + motd1 + "\n" + motd2};
@@ -52,84 +96,38 @@ public class ServerListScreen : Control {
 		hBoxContainer.AddChild(label);
 		serverList.AddChild(hBoxContainer);
 
-		hBoxContainer.Connect("gui_input", this, nameof(serverInput), new Array {name, hBoxContainer});
-
-		Server server = new Server(name, current, max, motd1 + "\n" + motd2);
-		SingletonHandler.instance.serverManager.addServer(server);
+		hBoxContainer.Connect("gui_input", this, nameof(serverInput), new Array {name});
 	}
 
-	public void onAdd() {
-		MinecraftClient minecraftClient = SingletonHandler.instance.client;
-		Error status = minecraftClient.connect("localhost", 25565);
-		GD.Print("Connected with status: " + status);
-		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.STATUS));
-		minecraftClient.switchState(PacketState.STATUS);
-		minecraftClient.sendPacket(new StatusRequestPacket());
-		minecraftClient.sendPacket(new PingPacket());
-
-		minecraftClient.addPacketListener<StatusResponsePacket>(packet => {
-			GD.Print("got status response " + packet.response.version + " " + packet.response.players);
-			minecraftClient.disconnect();
-		});
-
-		addServer("Test1", "Motd1", "Motd2", 0, 10);
-		addServer("Test2", "Motd1", "Motd2", 0, 10);
-		addServer("Test3", "Motd1", "Motd2", 0, 10);
-		addServer("Test4", "Motd1", "Motd2", 0, 10);
-		addServer("Test5", "Motd1", "Motd2", 0, 10);
-	}
-
-	public void serverInput(InputEvent @event, String name, HBoxContainer container) {
+	public void serverInput(InputEvent @event, String name) {
 		if (@event is InputEventMouseButton mouseEvent) {
-			if (mouseEvent.Pressed) {
-				joinServer(name, container);
+			if (mouseEvent.Pressed && mouseEvent.ButtonIndex == (int) ButtonList.Left) {
+				joinServer(name);
 			}
 		}
 	}
 
-	public void joinServer(String name, HBoxContainer container) {
+	public void joinServer(String name) {
 		GD.Print("serverClick " + name);
-		MinecraftClient minecraftClient = SingletonHandler.instance.client;
-		minecraftClient.clearPacketListeners();
-		Error status = minecraftClient.connect("localhost", 25565);
-		GD.Print("Connected with status: " + status);
-		minecraftClient.sendPacket(new HandshakePacket(578, "localhost", 25565, PacketState.LOGIN));
-		minecraftClient.switchState(PacketState.LOGIN);
-		minecraftClient.sendPacket(new LoginStartPacket("MiniDiggerTest"));
-		minecraftClient.addPacketListener<LoginSuccessPacket>(packet => {
-			minecraftClient.switchState(PacketState.PLAY);
-			// brand?
-			minecraftClient.sendPacket(new ClientSettingsPacket("en_US", 8, 0, true, 0b11111111, 1));
-			// minecraftClient.sendPacket(new ChatMessageClientPacket("Hello world!"));
-		});
-		
-		minecraftClient.addPacketListener<LoginDisconnectPacket>(packet => {
-			GD.Print("Kicked: " + packet.reason);
-			minecraftClient.disconnect();
-		});
-		minecraftClient.addPacketListener<SetCompressionPacket>(packet => {
-			GD.Print("Got compression request " + packet.threshold);
-			minecraftClient.compressionThreshold = packet.threshold;
-		});
-		minecraftClient.addPacketListener<KeepAliveServerPacket>(packet => {
-			minecraftClient.sendPacket(new KeepAliveClientPacket(packet.id));
-		});
-		minecraftClient.addPacketListener<ChunkDataPacket>(packet => {
-			// ignore
-		});
-		minecraftClient.addPacketListener<PlayerPositionAndLookServerPacket>(packet => {
-			minecraftClient.sendPacket(new TeleportConfirmPacket(packet.teleportId));
-		});
-		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => {
-			GD.Print("Got message " + packet.message);
-		});
-		minecraftClient.addPacketListener<PluginMessageServerPacket>(packet => {
-			GD.Print("Got plugin message in channel " + packet.channel);
-		});
+		Server server = SingletonHandler.instance.serverManager.getServer(name);
+		if (server == null) {
+			GD.Print("unknown server " + name);
+			return;
+		}
+
+		SingletonHandler.instance.gameClient.joinGame(server.host, server.port, "MiniDiggerTest");
 	}
 
 	public void onBack() {
 		GetTree().ChangeScene("res://screens/MainMenu.tscn");
+	}
+
+	public void onPopupBack() {
+		addServerPopup.Hide();
+	}
+
+	public void onAdd() {
+		addServerPopup.PopupCentered();
 	}
 }
 }

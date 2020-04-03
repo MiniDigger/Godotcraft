@@ -179,7 +179,7 @@ public struct PacketType {
 
 	private static void add(PacketType type) {
 		GD.Print("Register packet " + type);
-		types.Add((type.Id, type.State, type.Direction), type);
+		types[(type.Id, type.State, type.Direction)] = type;
 	}
 }
 }

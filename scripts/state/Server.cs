@@ -4,15 +4,13 @@ namespace Godotcraft.scripts.state {
 public class Server {
 
 	public String name { get; }
-	public int curr { get; }
-	public int max { get; }
-	public String motd { get; }
+	public String host { get; }
+	public ushort port { get; }
 
-	public Server(string name, int curr, int max, string motd) {
+	public Server(String name, String host, ushort port) {
 		this.name = name;
-		this.curr = curr;
-		this.max = max;
-		this.motd = motd;
+		this.host = host;
+		this.port = port;
 	}
 }
 }

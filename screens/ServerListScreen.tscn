@@ -84,6 +84,64 @@ margin_right = 141.0
 margin_bottom = 20.0
 text = "Back"
 
-[node name="PopupDialog" type="PopupDialog" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="AddServerPopup" type="PopupDialog" parent="."]
+margin_left = 406.55
+margin_top = 223.85
+margin_right = 618.55
+margin_bottom = 358.85
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="VBoxContainer" parent="AddServerPopup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="AddServerPopup/HBoxContainer"]
+margin_right = 212.0
+margin_bottom = 14.0
+text = "Add new Server"
+align = 1
+
+[node name="Name" type="LineEdit" parent="AddServerPopup/HBoxContainer"]
+margin_top = 29.0
+margin_right = 212.0
+margin_bottom = 53.0
+max_length = 20
+clear_button_enabled = true
+placeholder_text = "Server name"
+caret_blink = true
+
+[node name="Address" type="LineEdit" parent="AddServerPopup/HBoxContainer"]
+margin_top = 68.0
+margin_right = 212.0
+margin_bottom = 92.0
+max_length = 20
+clear_button_enabled = true
+placeholder_text = "Address"
+caret_blink = true
+
+[node name="ButtonBar" type="HBoxContainer" parent="AddServerPopup/HBoxContainer"]
+margin_top = 107.0
+margin_right = 212.0
+margin_bottom = 127.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Add" type="Button" parent="AddServerPopup/HBoxContainer/ButtonBar"]
+margin_left = 64.0
+margin_right = 101.0
+margin_bottom = 20.0
+text = "Add"
+
+[node name="Back" type="Button" parent="AddServerPopup/HBoxContainer/ButtonBar"]
+margin_left = 105.0
+margin_right = 147.0
+margin_bottom = 20.0
+text = "Back"

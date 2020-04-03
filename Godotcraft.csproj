@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scripts\network\protocol\GameClient.cs" />
     <Compile Include="scripts\network\protocol\login\client\ClientSettingsPacket.cs" />
     <Compile Include="scripts\network\protocol\login\client\LoginStartPacket.cs" />
     <Compile Include="scripts\network\protocol\login\server\LoginDisconnectPacket.cs" />

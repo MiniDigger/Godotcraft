@@ -176,9 +176,7 @@ public class MinecraftClient : Node {
 		// GD.Print("registering packet listener for type " + type);
 		List<object> listeners = packetListeners.ContainsKey(type) ? packetListeners[type] : new List<object>();
 		listeners.Add(action);
-		if (!packetListeners.ContainsKey(type)) {
-			packetListeners.Add(type, listeners);
-		}
+		packetListeners[type] = listeners;
 	}
 }
 }

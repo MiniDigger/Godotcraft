@@ -8,14 +8,29 @@ public class SingletonHandler : Node {
 	
 	public ServerManager serverManager { get; private set; }
 
-	public MinecraftClient client { get; private set; }
+	public MinecraftClient minecraftClient { get; private set; }
+	
+	public GameClient gameClient { get; private set; }
 	
 	public override void _Ready() {
 		instance = this;
 		serverManager = new ServerManager();
+		gameClient = new GameClient();
 		
-		client = new MinecraftClient();
-		AddChild(client);
+		serverManager.load();
+		
+		minecraftClient = new MinecraftClient();
+		AddChild(minecraftClient);
+	}
+
+	public MinecraftClient newMinecraftClient() {
+		MinecraftClient mcClient = new MinecraftClient();
+		AddChild(mcClient);
+		return mcClient;
+	}
+
+	public void removeMinecraftClient(MinecraftClient client) {
+		RemoveChild(client);
 	}
 }
 }

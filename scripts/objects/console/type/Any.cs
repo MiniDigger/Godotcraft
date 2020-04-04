@@ -1,12 +1,12 @@
 ﻿namespace Godotcraft.scripts.objects.console.type {
 public class Any : BaseType {
-	public Any() : base("Any") { }
+	public Any() : base("Any", null) { }
 
-	public override CHECK check(object originalValue) {
+	public override CHECK check(string originalValue) {
 		return CHECK.OK;
 	}
 
-	public override void normalized(object originalValue) {
+	public override void normalized(string originalValue) {
 		_normalizedValue = originalValue;
 	}
 }

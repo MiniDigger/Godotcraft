@@ -36,6 +36,7 @@ public class CommandGroup {
 					}
 					else {
 						Console.Log.error("CommandGroup: _getGroup: TODO: error"); // TODO: Change to proper error desc
+						return null;
 					}
 				}
 			}
@@ -51,11 +52,14 @@ public class CommandGroup {
 	}
 
 	public Command getCommand(String name, List<object> parameters, bool register = false) {
+		if (name == null) {
+			return null;
+		}
 		List<String> nameParts = name.Split(".", false).ToList();
 
 		if (nameParts.Count > 0) {
 			String lastNamePart = nameParts[nameParts.Count - 1];
-			CommandGroup group = this;
+			CommandGroup group = getGroup(nameParts, register);  // TODO upstream this is just this
 			if (nameParts.Count > 1) {
 				nameParts.RemoveAt(nameParts.Count - 1);
 				group = getGroup(nameParts, register);

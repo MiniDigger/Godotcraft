@@ -7,15 +7,15 @@ public class Filter : BaseType {
 		DENY
 	}
 
-	public List<object> filterList { get; }
+	public List<string> filterList { get; }
 	public MODE mode;
 
-	public Filter(List<object> filterList, MODE mode = MODE.ALLOW) : base("Filter") {
+	public Filter(List<string> filterList, MODE mode = MODE.ALLOW) : base("Filter", null) {
 		this.filterList = filterList;
 		this.mode = mode;
 	}
 
-	public override CHECK check(object originalValue) {
+	public override CHECK check(string originalValue) {
 		if ((mode == MODE.ALLOW && filterList.Contains(originalValue)) ||
 		    (mode == MODE.DENY && !filterList.Contains(originalValue))) {
 			return CHECK.OK;
@@ -24,7 +24,7 @@ public class Filter : BaseType {
 		return CHECK.CANCELED;
 	}
 
-	public override void normalized(object originalValue) {
+	public override void normalized(string originalValue) {
 		_normalizedValue = originalValue;
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using Godot;
 
 namespace Godotcraft.scripts.objects.console.type {
 public abstract class BaseType {
@@ -11,22 +12,27 @@ public abstract class BaseType {
 	}
 
 	public string _name { get; }
-	public string _rematch { get; }
+	public RegExMatch _rematch { get; private set; }
 	public object _normalizedValue { get; set; }
 
-	public string regex { get; }
+	public RegEx regex;
 
-	protected BaseType(string name) {
+
+	protected BaseType(string name, string pattern) {
 		_name = name;
+		if (pattern != null) {
+			regex = new RegEx();
+			regex.Compile(pattern);
+		} 
 	}
 
-	public virtual CHECK check(object originalValue) {
+	public virtual CHECK check(string originalValue) {
 		return recheck(regex, originalValue);
 	}
 
-	public CHECK recheck(string regex, object value) {
+	public CHECK recheck(RegEx regex, string value) {
 		if (regex != null) {
-			_rematch = regex.search(value);
+			_rematch = regex.Search(value);
 
 			if (_rematch != null) {
 				return CHECK.OK;
@@ -36,7 +42,7 @@ public abstract class BaseType {
 		return CHECK.FAILED;
 	}
 
-	public abstract void normalized(object originalValue);
+	public abstract void normalized(string originalValue);
 	
 	public object getNormalizedValue() {
 		return _normalizedValue;

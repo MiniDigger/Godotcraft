@@ -7,11 +7,11 @@ using String = System.String;
 namespace Godotcraft.scripts.objects.console.command {
 public class Command {
 	public String _name { get; }
-	public Action<object> _target { get; }
+	public Action<List<object>> _target { get; }
 	public List<Argument> _arguments { get; }
 	public String _description { get; }
 
-	public Command(string name, Action<object> target, List<Argument> arguments, string description = null) {
+	public Command(string name, Action<List<object>> target, List<Argument> arguments, string description = null) {
 		_name = name;
 		_target = target;
 		_arguments = arguments;
@@ -28,7 +28,7 @@ public class Command {
 
 			switch (argAssig) {
 				case BaseType.CHECK.FAILED:
-					Console.Log.warn("Expected " + _arguments[i]._type + " " + (i + 1) + " as argument.");
+					Console.Log.warn("Expected " + _arguments[i]._type + " as #" + (i + 1) + " argument.");
 					return;
 				case BaseType.CHECK.CANCELED:
 					return;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Godot;
-using Godotcraft.scripts.objects.console.command;
 
 namespace Godotcraft.scripts.objects {
 public class ConsoleLine : LineEdit {
@@ -13,9 +12,9 @@ public class ConsoleLine : LineEdit {
 
 	public static readonly char COMMAND_PARTS_SEPARATOR = ' ';
 
-	public static readonly string[] QUOTES = {"\"", "'"};
+	public static readonly List<string> QUOTES = new[]{"\"", "'"}.ToList();
 
-	public static readonly string[] SCREENERS = {"\\/"};
+	public static readonly List<string> SCREENERS = new[]{"\\/"}.ToList();
 
 	private string _tmpUsrEnteredCmd;
 
@@ -70,7 +69,7 @@ public class ConsoleLine : LineEdit {
 	public void execute(string input) {
 		Console.instance.writeLine("[color=#999999]$[/color] " + input);
 
-		string[] rawCommands = Regex.Split(RECOMMANDS_SEPARATOR, input);
+		string[] rawCommands = Regex.Split(input, RECOMMANDS_SEPARATOR);
 
 		var parsedCommands = parseCommands(rawCommands);
 
@@ -106,7 +105,7 @@ public class ConsoleLine : LineEdit {
 		string substring = null;
 		for (var i = 0; i < rawCommand.Length; i++) {
 			// Quote
-			if (QUOTES.Contains<>(rawCommand[i]) && i > 0 && !SCREENERS.Contains<>(rawCommand[i - 1])) {
+			if (QUOTES.Contains(rawCommand[i].ToString()) && i > 0 && !SCREENERS.Contains(rawCommand[i - 1].ToString())) {
 				if (isInsideQuotes && rawCommand[i] == openQuote) {
 					openQuote = '-';
 					isInsideQuotes = false;
@@ -132,7 +131,7 @@ public class ConsoleLine : LineEdit {
 			}
 
 			// Save separated argument
-			else if (substring != null && !substring.Empty()) {
+			if (substring != null && !substring.Empty()) {
 				if (name == null) {
 					name = substring;
 				}

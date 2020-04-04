@@ -120,7 +120,6 @@
     <Compile Include="scripts\state\ServerManager.cs" />
     <Compile Include="scripts\state\SingletonHandler.cs" />
     <Compile Include="scripts\state\StateHandler.cs" />
-    <Compile Include="scripts\util\ConsoleUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
@@ -128,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="scripts\util" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

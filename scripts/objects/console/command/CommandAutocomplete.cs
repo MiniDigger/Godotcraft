@@ -13,7 +13,8 @@ public class CommandAutocomplete {
 			return;
 		}
 
-		Console.instance._Commands._commands;
+		// TODO implement autocomplete
+		// Console.instance._Commands._commands;
 	}
 
 	public String next() {

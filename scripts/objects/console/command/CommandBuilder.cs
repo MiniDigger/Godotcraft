@@ -7,12 +7,12 @@ using Godotcraft.scripts.objects.console.argument;
 namespace Godotcraft.scripts.objects.console.command {
 public class CommandBuilder {
 	private String _name;
-	private Action<object> _target;
+	private Action<List<object>> _target;
 	private List<Argument> _arguments;
 	private String _description;
 	private CommandGroup _commandGroup;
 
-	public CommandBuilder(CommandGroup commandGroup, string name, Action<object> target) {
+	public CommandBuilder(CommandGroup commandGroup, string name, Action<List<object>> target) {
 		_name = name;
 		_target = target;
 		_commandGroup = commandGroup;

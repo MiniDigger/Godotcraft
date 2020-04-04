@@ -2,12 +2,12 @@
 using Godot;
 using Godotcraft.scripts.objects.console.command;
 using Godotcraft.scripts.objects.console.type;
-using String = System.String;
+using String = Godotcraft.scripts.objects.console.type.String;
 
 namespace Godotcraft.scripts.objects.console.misc {
 public class BaseCommands {
 	public static void init() {
-		Console.instance.addCommand("echo", text => Console.instance.write((String) text))
+		Console.instance.addCommand("echo", text => Console.instance.write(text.Count > 0 ? (string)text[0] : null))
 			.setDescription("Prints a string.")
 			.addArgument("text", typeof(String))
 			.register();
@@ -20,7 +20,7 @@ public class BaseCommands {
 			.setDescription("Lists all available commands.")
 			.register();
 
-		Console.instance.addCommand("help", command => help((String) command))
+		Console.instance.addCommand("help", command => help(command.Count > 0 ? (string)command[0] : null))
 			.setDescription("Outputs usage instructions.")
 			.addArgument("command", typeof(String))
 			.register();
@@ -37,13 +37,17 @@ public class BaseCommands {
 			.setDescription("Shows engine version.")
 			.register();
 
-		Console.instance.addCommand("fps_max", fps => Engine.TargetFps = (int) fps)
+		Console.instance.addCommand("fps_max", fps => {
+				if (fps.Count > 0) {
+					Engine.TargetFps = (int) fps[0];
+				}
+			})
 			.setDescription("The maximal framerate at which the application can run.")
 			.addArgument("fps", typeof(Int))
 			.register();
 	}
 
-	public static void help(String command = null) {
+	public static void help(string command = null) {
 		if (command != null) {
 			Command cmd = Console.instance.getCommand(command);
 

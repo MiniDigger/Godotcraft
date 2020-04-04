@@ -22,11 +22,10 @@ config/icon="res://icon.png"
 [autoload]
 
 SingletonHandler="*res://scripts/state/SingletonHandler.cs"
-Console="*res://addons/quentincaffeino-console/src/Console.tscn"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "quentincaffeino-console" )
+enabled=PoolStringArray(  )
 
 [input]
 

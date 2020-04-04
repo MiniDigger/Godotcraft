@@ -14,6 +14,7 @@
     <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)</IntermediateOutputPath>
     <ApiConfiguration Condition=" '$(Configuration)' != 'Release' ">Debug</ApiConfiguration>
     <ApiConfiguration Condition=" '$(Configuration)' == 'Release' ">Release</ApiConfiguration>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -87,10 +88,30 @@
     <Compile Include="scripts\network\protocol\play\server\ServerDifficultyPacket.cs" />
     <Compile Include="scripts\network\protocol\play\server\SetSlotPacket.cs" />
     <Compile Include="scripts\network\protocol\play\server\UnlockRecipesPacket.cs" />
+    <Compile Include="scripts\network\protocol\play\server\UpdateLightPacket.cs" />
     <Compile Include="scripts\network\protocol\status\client\PingPacket.cs" />
     <Compile Include="scripts\network\protocol\status\client\StatusRequestPacket.cs" />
     <Compile Include="scripts\network\protocol\status\server\PongPacket.cs" />
     <Compile Include="scripts\network\protocol\status\server\StatusResponsePacket.cs" />
+    <Compile Include="scripts\objects\Console.cs" />
+    <Compile Include="scripts\objects\ConsoleLine.cs" />
+    <Compile Include="scripts\objects\console\argument\Argument.cs" />
+    <Compile Include="scripts\objects\console\argument\ArgumentFactory.cs" />
+    <Compile Include="scripts\objects\console\command\Command.cs" />
+    <Compile Include="scripts\objects\console\command\CommandAutocomplete.cs" />
+    <Compile Include="scripts\objects\console\command\CommandBuilder.cs" />
+    <Compile Include="scripts\objects\console\command\CommandGroup.cs" />
+    <Compile Include="scripts\objects\console\misc\BaseCommands.cs" />
+    <Compile Include="scripts\objects\console\misc\History.cs" />
+    <Compile Include="scripts\objects\console\misc\Logger.cs" />
+    <Compile Include="scripts\objects\console\type\Any.cs" />
+    <Compile Include="scripts\objects\console\type\BaseType.cs" />
+    <Compile Include="scripts\objects\console\type\Bool.cs" />
+    <Compile Include="scripts\objects\console\type\Filter.cs" />
+    <Compile Include="scripts\objects\console\type\Float.cs" />
+    <Compile Include="scripts\objects\console\type\Int.cs" />
+    <Compile Include="scripts\objects\console\type\String.cs" />
+    <Compile Include="scripts\objects\console\type\TypeFactory.cs" />
     <Compile Include="scripts\screens\GameScreen.cs" />
     <Compile Include="scripts\screens\MainMenu.cs" />
     <Compile Include="scripts\screens\OptionsScreen.cs" />
@@ -99,6 +120,7 @@
     <Compile Include="scripts\state\ServerManager.cs" />
     <Compile Include="scripts\state\SingletonHandler.cs" />
     <Compile Include="scripts\state\StateHandler.cs" />
+    <Compile Include="scripts\util\ConsoleUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

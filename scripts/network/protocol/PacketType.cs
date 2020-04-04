@@ -49,6 +49,7 @@ public struct PacketType {
 			public static readonly PacketType entityStatus = new PacketType(0x1C, state, dir, typeof(EntityStatusPacket));
 			public static readonly PacketType keepAlive = new PacketType(0x21, state, dir, typeof(KeepAliveServerPacket));
 			public static readonly PacketType chunkData = new PacketType(0x22, state, dir, typeof(ChunkDataPacket));
+			public static readonly PacketType updateLight = new PacketType(0x25, state, dir, typeof(UpdateLightPacket));
 			public static readonly PacketType joinGame = new PacketType(0x26, state, dir, typeof(JoinGamePacket));
 			public static readonly PacketType playerAbilities = new PacketType(0x32, state, dir, typeof(PlayerAbilitiesPacket));
 			public static readonly PacketType playerPositionAndLook = new PacketType(0x36, state, dir, typeof(PlayerPositionAndLookServerPacket));
@@ -63,6 +64,7 @@ public struct PacketType {
 				add(entityStatus);
 				add(keepAlive);
 				add(chunkData);
+				add(updateLight);
 				add(joinGame);
 				add(playerAbilities);
 				add(playerPositionAndLook);

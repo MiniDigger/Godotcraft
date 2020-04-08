@@ -120,10 +120,16 @@
     <Compile Include="scripts\state\ServerManager.cs" />
     <Compile Include="scripts\state\SingletonHandler.cs" />
     <Compile Include="scripts\state\StateHandler.cs" />
+    <Compile Include="scripts\world\ChunkData.cs" />
+    <Compile Include="scripts\world\ChunkSection.cs" />
+    <Compile Include="scripts\world\WorldGen.cs" />
+    <Compile Include="test\MeshInstance.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="README.md" />
+    <Content Include="test\Camera_Pivot.gd" />
+    <Content Include="test\Testing_Scene.tscn" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

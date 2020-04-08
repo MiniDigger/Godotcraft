@@ -11,3 +11,7 @@ anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.93393, -0.122257, 0.335898, 0, 0.939693, 0.34202, -0.357455, -0.319423, 0.877607, 0, 199.271, 0 )
+far = 1000.0

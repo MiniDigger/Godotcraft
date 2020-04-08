@@ -4,6 +4,7 @@ Minecraft, but using the godot engine
 
 # Status
 
+08.04.2002: Random experiments with voxel rendering, including trying to do culling  
 04.04.2020: first pass on adding a console/chat view, had to rewrite stuff to c#...  
 03.04.2020: reworked the server list, its actually working now  
 02.04.2020: worked on a better protocol impl the last few days, got joining working, chat working, no real ui yet  

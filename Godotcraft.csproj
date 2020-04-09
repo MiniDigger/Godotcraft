@@ -124,6 +124,7 @@
     <Compile Include="scripts\world\ChunkSection.cs" />
     <Compile Include="scripts\world\WorldGen.cs" />
     <Compile Include="test\MeshInstance.cs" />
+    <Compile Include="test\MeshInstanceV2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

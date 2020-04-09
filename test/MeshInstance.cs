@@ -32,7 +32,7 @@ public class MeshInstance : Godot.MeshInstance {
 		if (x % 4 == 1) {
 			data = 1;
 		}
-		if (y % 4 == 1) {
+		if (z % 4 == 1) {
 			data = 2;
 		}
 		if (y > 1 || y < 0 || x % 4 == 0 || z % 4 == 0) {
@@ -180,9 +180,9 @@ public class MeshInstance : Godot.MeshInstance {
 		return arrayQuadVertices.Count - 1;
 	}
 
-	// public override void _Input(InputEvent @event) {
-	// 	if (@event is InputEventKey && Input.IsKeyPressed((int) KeyList.P)) {
-	// 		GetViewport().DebugDraw = (Viewport.DebugDrawEnum) (((int) GetViewport().DebugDraw + 1) % 4);
-	// 	}
-	// }
+	public override void _Input(InputEvent @event) {
+		if (@event is InputEventKey && Input.IsKeyPressed((int) KeyList.P)) {
+			GetViewport().DebugDraw = (Viewport.DebugDrawEnum) (((int) GetViewport().DebugDraw + 1) % 4);
+		}
+	}
 }

@@ -77,8 +77,7 @@ public class TextureAtlas {
 
 		texture.SavePng("user://test.png");
 
-		// return new AtlasTexture {Atlas = imageTexture, Region = new Rect2(0,0,atlasWidth, atlasHeight)};
-		return imageTexture;
+		return new AtlasTexture {Atlas = imageTexture, Region = new Rect2(0,0,atlasWidth, atlasHeight)};
 	}
 
 	private List<string> getImages(Directory textureDir) {

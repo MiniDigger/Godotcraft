@@ -54,8 +54,8 @@ public class ChunkRenderer : Godot.MeshInstance {
 	private int getData(ChunkSection section, int x, int y, int z) {
 		// int data = section.get(ChunkData.index(x, y, z));
 		int data = 1;
-		if (x % 4 == 1) {
-			data = 1;
+		if (z % 4 == 2) {
+			data = 3;
 		}
 
 		if (z % 4 == 1) {
@@ -82,38 +82,43 @@ public class ChunkRenderer : Godot.MeshInstance {
 
 		if (renderFront) {
 			tool.AddNormal(new Vector3(0, 0, -1));
-			addTri(p001, p101, p111, p011);
+			addTri(p001, p101, p111, p011, data);
 		}
 
 		if (renderBack) {
 			tool.AddNormal(new Vector3(0, 0, 1));
-			addTri(p100, p000, p010, p110);
+			addTri(p100, p000, p010, p110, data);
 		}
 
 		if (renderRight) {
 			tool.AddNormal(new Vector3(1, 0, 0));
-			addTri(p101, p100, p110, p111);
+			addTri(p101, p100, p110, p111, data);
 		}
 
 		if (renderLeft) {
 			tool.AddNormal(new Vector3(-1, 0, 0));
-			addTri(p000, p001, p011, p010);
+			addTri(p000, p001, p011, p010, data);
 		}
 
 		if (renderTop) {
 			tool.AddNormal(new Vector3(0, 1, 0));
-			addTri(p011, p111, p110, p010);
+			addTri(p011, p111, p110, p010, data);
 		}
 
 		if (renderBot) {
 			tool.AddNormal(new Vector3(0, -1, 0));
-			addTri(p000, p100, p101, p001);
+			addTri(p000, p100, p101, p001, data);
 		}
 	}
 
-	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, int data) {
 		// UVMap uv = UVMap.getMap("aa_test");
 		UVMap uv = UVMap.getMap("dirt");
+		if (data == 2) {
+			uv = UVMap.getMap("bedrock");
+		} else if (data == 3) {
+			uv = UVMap.getMap("jungle_planks");
+		}
 
 		tool.AddUv(uv.uvMap[0]);
 		tool.AddVertex(p4);

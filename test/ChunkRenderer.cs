@@ -2,7 +2,7 @@
 using Godotcraft.scripts.world;
 
 namespace Godotcraft.test {
-public class MeshInstanceV2 : Godot.MeshInstance {
+public class ChunkRenderer : Godot.MeshInstance {
 	const float CUBE_SIZE = 0.5f;
 
 	private readonly SurfaceTool tool = new SurfaceTool();
@@ -10,6 +10,8 @@ public class MeshInstanceV2 : Godot.MeshInstance {
 	public override void _Ready() {
 		VisualServer.SetDebugGenerateWireframes(true);
 		ChunkData chunkData = new ChunkData();
+		TextureAtlas.instance.atlas.ToString();
+		// MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas};
 		Mesh = createMesh(chunkData.getSection(0));
 	}
 

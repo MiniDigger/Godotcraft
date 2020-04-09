@@ -123,8 +123,9 @@
     <Compile Include="scripts\world\ChunkData.cs" />
     <Compile Include="scripts\world\ChunkSection.cs" />
     <Compile Include="scripts\world\WorldGen.cs" />
-    <Compile Include="test\MeshInstance.cs" />
-    <Compile Include="test\MeshInstanceV2.cs" />
+    <Compile Include="test\ChunkRenderer.cs" />
+    <Compile Include="test\TextureAtlas.cs" />
+    <Compile Include="test\UVMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

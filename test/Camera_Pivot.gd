@@ -3,7 +3,7 @@ extends Spatial
 # The percentage of the screen that will move the camera when the mouse is over it.
 const SCREEN_AMOUNT = 0.1;
 # The speed the camera will rotate at.
-const ROTATION_SPEED = 2;
+const ROTATION_SPEED = 1.7;
 
 func _ready():
 	pass
@@ -20,10 +20,10 @@ func _process(delta):
 	# the percentage of the screen that will move the camera on the left side.
 	if (mouse_position.x < amount_to_look_for):
 		# Rotate the camera.
-		rotate_y(-ROTATION_SPEED * delta);
+		rotate_y(ROTATION_SPEED * delta);
 	
 	# If the mouse is more than screen_width minus amount_to_look_for, then the mouse
 	# most be over the percentage of the screen that will move the camera on the right side.
 	elif (mouse_position.x > screen_width - amount_to_look_for):
 		# Rotate the camera.
-		rotate_y(ROTATION_SPEED * delta);
+		rotate_y(-ROTATION_SPEED * delta);

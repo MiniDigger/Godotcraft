@@ -10,8 +10,7 @@ public class ChunkRenderer : Godot.MeshInstance {
 	public override void _Ready() {
 		VisualServer.SetDebugGenerateWireframes(true);
 		ChunkData chunkData = new ChunkData();
-		TextureAtlas.instance.atlas.ToString();
-		// MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas};
+		MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas, ParamsCullMode = SpatialMaterial.CullMode.Back};
 		Mesh = createMesh(chunkData.getSection(0));
 	}
 
@@ -67,93 +66,68 @@ public class ChunkRenderer : Godot.MeshInstance {
 			data = 0;
 		}
 
-		// switch (x) {
-		// 	case 0 when y == 0 && z == 0:
-		// 	case 0 when y == 0 && z == 1:
-		// 		return 1;
-		// 	default:
-		// 		return 0;
-		// }
-
 		return data;
 	}
 
 	public void createCube(int x, int y, int z, int data, bool renderFront, bool renderBack, bool renderRight, bool renderLeft, bool renderTop,
 		bool renderBot) {
-		var p1 = new Vector3(x - CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
-		var p2 = new Vector3(x + CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
-		var p3 = new Vector3(x + CUBE_SIZE, y + CUBE_SIZE, z + CUBE_SIZE);
-		var p4 = new Vector3(x - CUBE_SIZE, y + CUBE_SIZE, z + CUBE_SIZE);
-		var p5 = new Vector3(x + CUBE_SIZE, y - CUBE_SIZE, z - CUBE_SIZE);
-		var p6 = new Vector3(x - CUBE_SIZE, y - CUBE_SIZE, z - CUBE_SIZE);
-		var p7 = new Vector3(x - CUBE_SIZE, y + CUBE_SIZE, z - CUBE_SIZE);
-		var p8 = new Vector3(x + CUBE_SIZE, y + CUBE_SIZE, z - CUBE_SIZE);
+		var p001 = new Vector3(x - CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
+		var p101 = new Vector3(x + CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
+		var p111 = new Vector3(x + CUBE_SIZE, y + CUBE_SIZE, z + CUBE_SIZE);
+		var p011 = new Vector3(x - CUBE_SIZE, y + CUBE_SIZE, z + CUBE_SIZE);
+		var p100 = new Vector3(x + CUBE_SIZE, y - CUBE_SIZE, z - CUBE_SIZE);
+		var p000 = new Vector3(x - CUBE_SIZE, y - CUBE_SIZE, z - CUBE_SIZE);
+		var p010 = new Vector3(x - CUBE_SIZE, y + CUBE_SIZE, z - CUBE_SIZE);
+		var p110 = new Vector3(x + CUBE_SIZE, y + CUBE_SIZE, z - CUBE_SIZE);
 
 		if (renderFront) {
-			tool.AddNormal(new Vector3(0, 0, 1));
-			tool.AddVertex(p1);
-			tool.AddVertex(p2);
-			tool.AddVertex(p3);
-
-			tool.AddVertex(p1);
-			tool.AddVertex(p3);
-			tool.AddVertex(p4);
+			tool.AddNormal(new Vector3(0, 0, -1));
+			addTri(p001, p101, p111, p011);
 		}
 
 		if (renderBack) {
-			tool.AddNormal(new Vector3(0, 0, -1));
-			tool.AddVertex(p5);
-			tool.AddVertex(p6);
-			tool.AddVertex(p7);
-
-			tool.AddVertex(p5);
-			tool.AddVertex(p7);
-			tool.AddVertex(p8);
+			tool.AddNormal(new Vector3(0, 0, 1));
+			addTri(p100, p000, p010, p110);
 		}
 
 		if (renderRight) {
-			tool.AddNormal(new Vector3(-1, 0, 0));
-			tool.AddVertex(p2);
-			tool.AddVertex(p5);
-			tool.AddVertex(p8);
-
-			tool.AddVertex(p2);
-			tool.AddVertex(p8);
-			tool.AddVertex(p3);
+			tool.AddNormal(new Vector3(1, 0, 0));
+			addTri(p101, p100, p110, p111);
 		}
 
 		if (renderLeft) {
-			tool.AddNormal(new Vector3(1, 0, 0));
-			tool.AddVertex(p6);
-			tool.AddVertex(p1);
-			tool.AddVertex(p4);
-
-			tool.AddVertex(p6);
-			tool.AddVertex(p4);
-			tool.AddVertex(p7);
+			tool.AddNormal(new Vector3(-1, 0, 0));
+			addTri(p000, p001, p011, p010);
 		}
 
 		if (renderTop) {
-			tool.AddNormal(new Vector3(0, -1, 0));
-			tool.AddVertex(p4);
-			tool.AddVertex(p3);
-			tool.AddVertex(p8);
-
-			tool.AddVertex(p4);
-			tool.AddVertex(p8);
-			tool.AddVertex(p7);
+			tool.AddNormal(new Vector3(0, 1, 0));
+			addTri(p011, p111, p110, p010);
 		}
 
 		if (renderBot) {
-			tool.AddNormal(new Vector3(0, 1, 0));
-			tool.AddVertex(p6);
-			tool.AddVertex(p5);
-			tool.AddVertex(p2);
-
-			tool.AddVertex(p6);
-			tool.AddVertex(p2);
-			tool.AddVertex(p1);
+			tool.AddNormal(new Vector3(0, -1, 0));
+			addTri(p000, p100, p101, p001);
 		}
+	}
+
+	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4) {
+		// UVMap uv = UVMap.getMap("aa_test");
+		UVMap uv = UVMap.getMap("dirt");
+
+		tool.AddUv(uv.uvMap[0]);
+		tool.AddVertex(p4);
+		tool.AddUv(uv.uvMap[2]);
+		tool.AddVertex(p3);
+		tool.AddUv(uv.uvMap[3]);
+		tool.AddVertex(p2);
+
+		tool.AddUv(uv.uvMap[0]);
+		tool.AddVertex(p4);
+		tool.AddUv(uv.uvMap[3]);
+		tool.AddVertex(p2);
+		tool.AddUv(uv.uvMap[1]);
+		tool.AddVertex(p1);
 	}
 
 	public override void _Input(InputEvent @event) {

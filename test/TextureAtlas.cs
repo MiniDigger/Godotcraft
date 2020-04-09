@@ -7,13 +7,13 @@ namespace Godotcraft.test {
 public class TextureAtlas {
 	public static readonly TextureAtlas instance = new TextureAtlas();
 
-	public AtlasTexture atlas { get; }
+	public Texture atlas { get; }
 
 	public TextureAtlas() {
 		atlas = createAtlas();
 	}
 
-	private AtlasTexture createAtlas() {
+	private Texture createAtlas() {
 		string texturePath = "user://mcassets/assets/minecraft/textures/block/";
 		Directory textureDir = new Directory();
 		textureDir.Open(texturePath);
@@ -49,24 +49,20 @@ public class TextureAtlas {
 
 				float startX = x * pixelWidth;
 				float startY = y * pixelHeight;
-				float perPixelRatioX = 1f / texture.GetWidth();
-				float perPixelRatioY = 1f / texture.GetHeight();
+				float perPixelRatioX = 1f / atlasWidth;
+				float perPixelRatioY = 1f / atlasHeight;
 				startX *= perPixelRatioX;
 				startY *= perPixelRatioY;
-				// float endX = startX + (perPixelRatioX * pixelWidth);
-				// float endY = startY + (perPixelRatioY * pixelHeight);
-				float endX = startX + pixelWidth;
-				float endY = startY + pixelHeight;
+				float endX = startX + (perPixelRatioX * pixelWidth);
+				float endY = startY + (perPixelRatioY * pixelHeight);
+				// float endX = startX + pixelWidth;
+				// float endY = startY + pixelHeight;
 
-				// new UVMap(images[count].Replace(".png", ""), new[] {
-				// 	new Vector2(startX, startY),
-				// 	new Vector2(startX, endY),
-				// 	new Vector2(endX, startY),
-				// 	new Vector2(endX, endY),
-				// }).register();
 				new UVMap(images[count].Replace(".png", ""), new[] {
-					new Vector2(perPixelRatioX, perPixelRatioY),
-					new Vector2(endX, endY)
+					new Vector2(startX, startY),
+					new Vector2(startX, endY),
+					new Vector2(endX, startY),
+					new Vector2(endX, endY),
 				}).register();
 
 				count++;
@@ -77,10 +73,12 @@ public class TextureAtlas {
 
 		ImageTexture imageTexture = new ImageTexture();
 		imageTexture.CreateFromImage(texture);
+		imageTexture.Flags &= ~(uint)Texture.FlagsEnum.Filter;
 
 		texture.SavePng("user://test.png");
 
-		return new AtlasTexture {Atlas = imageTexture, Region = new Rect2(0,0,atlasWidth, atlasHeight)};
+		// return new AtlasTexture {Atlas = imageTexture, Region = new Rect2(0,0,atlasWidth, atlasHeight)};
+		return imageTexture;
 	}
 
 	private List<string> getImages(Directory textureDir) {

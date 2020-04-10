@@ -113,6 +113,7 @@
     <Compile Include="scripts\objects\console\type\Int.cs" />
     <Compile Include="scripts\objects\console\type\String.cs" />
     <Compile Include="scripts\objects\console\type\TypeFactory.cs" />
+    <Compile Include="scripts\objects\HUD.cs" />
     <Compile Include="scripts\objects\Player.cs" />
     <Compile Include="scripts\renderer\ChunkRenderer.cs" />
     <Compile Include="scripts\renderer\TextureAtlas.cs" />

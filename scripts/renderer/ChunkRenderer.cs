@@ -13,6 +13,15 @@ public class ChunkRenderer : Godot.MeshInstance {
 		ChunkData chunkData = new ChunkData();
 		MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas, ParamsCullMode = SpatialMaterial.CullMode.Back};
 		Mesh = createMesh(chunkData.getSection(0));
+		createCollision(Mesh);
+	}
+
+	public void createCollision(Mesh mesh) {
+		StaticBody staticBody = new StaticBody();
+		ConcavePolygonShape shape = new ConcavePolygonShape {Data = mesh.GetFaces()};
+		CollisionShape collisionShape = new CollisionShape {Shape = shape};
+		staticBody.AddChild(collisionShape);
+		AddChild(staticBody);
 	}
 
 	public Mesh createMesh(ChunkSection section) {

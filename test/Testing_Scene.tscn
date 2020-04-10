@@ -32,8 +32,42 @@ extents = Vector3( 25, 0.01, 25 )
 
 [node name="Testing_Scene" type="Spatial"]
 
-[node name="Chunk" type="MeshInstance" parent="."]
+[node name="Chunks" type="Node" parent="."]
+
+[node name="Chunk" type="MeshInstance" parent="Chunks"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5 )
+script = ExtResource( 3 )
+
+[node name="Chunk2" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0, -5 )
+script = ExtResource( 3 )
+
+[node name="Chunk3" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -5 )
+script = ExtResource( 3 )
+
+[node name="Chunk6" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -21 )
+script = ExtResource( 3 )
+
+[node name="Chunk5" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0, -21 )
+script = ExtResource( 3 )
+
+[node name="Chunk4" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -21 )
+script = ExtResource( 3 )
+
+[node name="Chunk9" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 11 )
+script = ExtResource( 3 )
+
+[node name="Chunk8" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 0, 11 )
+script = ExtResource( 3 )
+
+[node name="Chunk7" type="MeshInstance" parent="Chunks"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, 11 )
 script = ExtResource( 3 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]

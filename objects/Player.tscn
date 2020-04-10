@@ -6,7 +6,7 @@
 size = Vector3( 1, 2, 1 )
 
 [sub_resource type="CapsuleShape" id=2]
-radius = 0.5
+radius = 0.4
 
 [node name="Player" type="KinematicBody"]
 script = ExtResource( 1 )

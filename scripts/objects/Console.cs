@@ -10,12 +10,6 @@ public class Console : CanvasLayer {
 	public static Logger Log = new Logger();
 	public static History History = new History(10);
 
-	[Export] public String action_console_open = "console_open";
-	[Export] public String action_console_close = "console_close";
-	[Export] public String action_history_up = "ui_up";
-	[Export] public String action_history_down = "ui_down";
-
-
 	public CommandGroup _rootGroup { get; }
 
 	// Used to clear text from bb tags
@@ -75,8 +69,8 @@ public class Console : CanvasLayer {
 	}
 
 	public override void _Input(InputEvent @event) {
-		if ((!isConsoleShown && Input.IsActionJustPressed(action_console_open)) ||
-		    (isConsoleShown && Input.IsActionJustPressed(action_console_close))) {
+		if ((!isConsoleShown && Input.IsActionJustPressed(Actions.console_open)) ||
+		    (isConsoleShown && Input.IsActionJustPressed(Actions.console_close))) {
 			toggleConsole();
 		}
 	}

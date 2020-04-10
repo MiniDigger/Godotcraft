@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Godot;
 using File = System.IO.File;
 
-namespace Godotcraft.test {
+namespace Godotcraft.scripts.renderer {
 public class TextureAtlas {
 	public static readonly TextureAtlas instance = new TextureAtlas();
 

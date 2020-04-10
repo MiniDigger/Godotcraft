@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Godotcraft.scripts.world;
 
-namespace Godotcraft.test {
+namespace Godotcraft.scripts.renderer {
 public class ChunkRenderer : Godot.MeshInstance {
 	const float CUBE_SIZE = 0.5f;
 

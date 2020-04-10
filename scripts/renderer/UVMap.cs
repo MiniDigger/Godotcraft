@@ -2,7 +2,7 @@
 using System.Linq;
 using Godot;
 
-namespace Godotcraft.test {
+namespace Godotcraft.scripts.renderer {
 public class UVMap {
 
 	private static readonly List<UVMap> maps = new List<UVMap>();

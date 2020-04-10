@@ -27,7 +27,7 @@ public class ConsoleLine : LineEdit {
 
 	public override void _Input(InputEvent @event) {
 		// Show next line in history
-		if (Input.IsActionJustPressed(Console.instance.action_history_up)) {
+		if (Input.IsActionJustPressed(Actions.ui_up)) {
 			_currCmd = Console.History.current();
 			Console.History.previous();
 
@@ -37,7 +37,7 @@ public class ConsoleLine : LineEdit {
 		}
 
 		// Show previous line in history
-		if (Input.IsActionJustPressed(Console.instance.action_history_down)) {
+		if (Input.IsActionJustPressed(Actions.ui_down)) {
 			_currCmd = Console.History.next();
 
 			if (_currCmd != null && _tmpUsrEnteredCmd != null) {

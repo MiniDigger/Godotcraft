@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="scripts\Actions.cs" />
     <Compile Include="scripts\network\protocol\GameClient.cs" />
     <Compile Include="scripts\network\protocol\login\client\ClientSettingsPacket.cs" />
     <Compile Include="scripts\network\protocol\login\client\LoginStartPacket.cs" />
@@ -112,6 +113,10 @@
     <Compile Include="scripts\objects\console\type\Int.cs" />
     <Compile Include="scripts\objects\console\type\String.cs" />
     <Compile Include="scripts\objects\console\type\TypeFactory.cs" />
+    <Compile Include="scripts\objects\Player.cs" />
+    <Compile Include="scripts\renderer\ChunkRenderer.cs" />
+    <Compile Include="scripts\renderer\TextureAtlas.cs" />
+    <Compile Include="scripts\renderer\UVMap.cs" />
     <Compile Include="scripts\screens\GameScreen.cs" />
     <Compile Include="scripts\screens\MainMenu.cs" />
     <Compile Include="scripts\screens\OptionsScreen.cs" />
@@ -123,9 +128,6 @@
     <Compile Include="scripts\world\ChunkData.cs" />
     <Compile Include="scripts\world\ChunkSection.cs" />
     <Compile Include="scripts\world\WorldGen.cs" />
-    <Compile Include="test\ChunkRenderer.cs" />
-    <Compile Include="test\TextureAtlas.cs" />
-    <Compile Include="test\UVMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

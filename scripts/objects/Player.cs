@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using Godotcraft.scripts;
+using Console = Godotcraft.scripts.objects.Console;
 
 // taken from https://github.com/turtlewit/VineCrawler/blob/master/PlayerNew.gd
 public class Player : KinematicBody {
@@ -70,14 +71,16 @@ public class Player : KinematicBody {
 	private void setMovementDir() {
 		forwardMove = 0;
 		rightMove = 0;
-		forwardMove += Convert.ToInt32(Input.IsActionPressed(Actions.movement_walk_forwards));
-		forwardMove -= Convert.ToInt32(Input.IsActionPressed(Actions.movement_walk_backwards));
-		rightMove += Convert.ToInt32(Input.IsActionPressed(Actions.movement_strafe_right));
-		rightMove -= Convert.ToInt32(Input.IsActionPressed(Actions.movement_strafe_left));
+		if (!Console.instance.isConsoleShown) {
+			forwardMove += Convert.ToInt32(Input.IsActionPressed(Actions.movement_walk_forwards));
+			forwardMove -= Convert.ToInt32(Input.IsActionPressed(Actions.movement_walk_backwards));
+			rightMove += Convert.ToInt32(Input.IsActionPressed(Actions.movement_strafe_right));
+			rightMove -= Convert.ToInt32(Input.IsActionPressed(Actions.movement_strafe_left));
+		}
 	}
 
 	private void queueJump() {
-		if (Input.IsActionJustPressed(Actions.movement_jump) && !wishJump) {
+		if (Input.IsActionJustPressed(Actions.movement_jump) && !wishJump && !Console.instance.isConsoleShown) {
 			wishJump = true;
 		}
 
@@ -240,7 +243,7 @@ public class Player : KinematicBody {
 	}
 
 	public override void _Input(InputEvent @event) {
-		if (@event is InputEventMouseMotion motion) {
+		if (@event is InputEventMouseMotion motion && !Console.instance.isConsoleShown) {
 			RotateY(-Mathf.Deg2Rad(motion.Relative.x) * mouseSensitivity);
 			camera.RotateX(-Mathf.Deg2Rad(motion.Relative.y) * mouseSensitivity);
 		}

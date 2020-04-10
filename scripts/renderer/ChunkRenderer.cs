@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Godotcraft.scripts.objects;
 using Godotcraft.scripts.world;
 
 namespace Godotcraft.scripts.renderer {
@@ -136,7 +137,7 @@ public class ChunkRenderer : Godot.MeshInstance {
 	}
 
 	public override void _Input(InputEvent @event) {
-		if (@event is InputEventKey && Input.IsKeyPressed((int) KeyList.P)) {
+		if (@event is InputEventKey && Input.IsKeyPressed((int) KeyList.P) && !Console.instance.isConsoleShown) {
 			GetViewport().DebugDraw = (Viewport.DebugDrawEnum) (((int) GetViewport().DebugDraw + 1) % 4);
 		}
 	}

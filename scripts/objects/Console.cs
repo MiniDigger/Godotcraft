@@ -111,9 +111,11 @@ public class Console : CanvasLayer {
 			Line.Clear();
 			Line.GrabFocus();
 			_animationPlayer.PlayBackwards("fade");
+			Input.SetMouseMode(Input.MouseMode.Visible);
 		}
 		else {
 			_animationPlayer.Play("fade");
+			Input.SetMouseMode(Input.MouseMode.Captured);
 		}
 
 		isConsoleShown = !isConsoleShown;

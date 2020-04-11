@@ -161,6 +161,7 @@ public class MinecraftClient : Node {
 		}
 		catch (Exception ex) {
 			GD.Print($"Error while reading packet {type}: {ex.GetType().Name}: {ex.Message}");
+			GD.Print(ex.StackTrace);
 		}
 		
 		return packet;

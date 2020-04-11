@@ -10,7 +10,8 @@ InventiveTalent has a repo with all the stuff: https://api.github.com/repos/Inve
 
 # Status
 
-10.04.2002: Movement! https://streamable.com/951xc2  
+11.04.2020: Chunk rendering? Kinda? Maybe? https://i.imgur.com/sumfigG.png  
+10.04.2020: Movement! https://streamable.com/951xc2  
 09.04.2020: More rendering, better culling, texture atlas! https://i.imgur.com/3yl7z1Q.png  
 08.04.2020: Random experiments with voxel rendering, including trying to do culling  
 04.04.2020: first pass on adding a console/chat view, had to rewrite stuff to c#... https://i.imgur.com/7C0daDI.png  

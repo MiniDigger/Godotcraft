@@ -1,6 +1,9 @@
-﻿using Godot;
-using Godotcraft.scripts.objects;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Godot;
 using Godotcraft.scripts.world;
+using Console = Godotcraft.scripts.objects.Console;
 
 namespace Godotcraft.scripts.renderer {
 public class ChunkRenderer : Godot.MeshInstance {
@@ -10,23 +13,23 @@ public class ChunkRenderer : Godot.MeshInstance {
 
 	public override void _Ready() {
 		VisualServer.SetDebugGenerateWireframes(true);
-		ChunkData chunkData = new ChunkData();
 		MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas, ParamsCullMode = SpatialMaterial.CullMode.Back};
-		Mesh = createMesh(chunkData.getSection(0));
-		createCollision(Mesh);
 	}
 
-	public void createCollision(Mesh mesh) {
+	public void createCollision() {
 		StaticBody staticBody = new StaticBody();
-		ConcavePolygonShape shape = new ConcavePolygonShape {Data = mesh.GetFaces()};
+		ConcavePolygonShape shape = new ConcavePolygonShape();
+		var faces = Mesh.GetFaces();
+		shape.Data = faces;
 		CollisionShape collisionShape = new CollisionShape {Shape = shape};
 		staticBody.AddChild(collisionShape);
 		AddChild(staticBody);
 	}
 
-	public Mesh createMesh(ChunkSection section) {
+	public bool createMesh(ChunkSection section) {
 		tool.Begin(Mesh.PrimitiveType.Triangles);
 
+		bool addedOne = false;
 		for (var x = 0; x < 16; x++) {
 			for (var y = 0; y < 16; y++) {
 				for (var z = 0; z < 16; z++) {
@@ -35,6 +38,8 @@ public class ChunkRenderer : Godot.MeshInstance {
 					if (data == 0) {
 						continue;
 					}
+
+					addedOne = true;
 
 					// culling
 					bool renderFront = true;
@@ -56,27 +61,18 @@ public class ChunkRenderer : Godot.MeshInstance {
 			}
 		}
 
+		if (!addedOne) {
+			return false;
+		}
+		
 		tool.Index();
 
-		return tool.Commit();
+		Mesh = tool.Commit();
+		return true;
 	}
 
 	private int getData(ChunkSection section, int x, int y, int z) {
-		// int data = section.get(ChunkData.index(x, y, z));
-		int data = 1;
-		if (z % 4 == 2) {
-			data = 3;
-		}
-
-		if (z % 4 == 1) {
-			data = 2;
-		}
-
-		if (y > 1 || y < 0 || x % 4 == 0 || z % 4 == 0) {
-			data = 0;
-		}
-
-		return data;
+		return section.size == 0 ? 0 : section.get(ChunkData.index(x, y, z));
 	}
 
 	public void createCube(int x, int y, int z, int data, bool renderFront, bool renderBack, bool renderRight, bool renderLeft, bool renderTop,
@@ -126,7 +122,8 @@ public class ChunkRenderer : Godot.MeshInstance {
 		UVMap uv = UVMap.getMap("dirt");
 		if (data == 2) {
 			uv = UVMap.getMap("bedrock");
-		} else if (data == 3) {
+		}
+		else if (data == 3) {
 			uv = UVMap.getMap("jungle_planks");
 		}
 

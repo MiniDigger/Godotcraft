@@ -3,6 +3,8 @@ using Godot;
 namespace Godotcraft.scripts.screens {
 public class MainMenu : Control {
 	public override void _Ready() {
+		Input.SetMouseMode(Input.MouseMode.Visible);
+		
 		Button playButton = GetNode("CenterContainer/VBoxContainer/Play") as Button;
 		Button optionsButton = GetNode("CenterContainer/VBoxContainer/Options") as Button;
 		Button quitButton = GetNode("CenterContainer/VBoxContainer/Quit") as Button;

@@ -1,5 +1,7 @@
 ﻿using Godot;
 using Godotcraft.scripts.network.protocol;
+using Godotcraft.scripts.renderer;
+using Godotcraft.scripts.world;
 
 namespace Godotcraft.scripts.state {
 public class SingletonHandler : Node {
@@ -13,7 +15,8 @@ public class SingletonHandler : Node {
 	public GameClient gameClient { get; private set; }
 	
 	public StateHandler stateHandler { get; private set; }
-	
+	public ChunkHandler chunkHandler { get; set; }
+
 	public override void _Ready() {
 		instance = this;
 		serverManager = new ServerManager();
@@ -24,6 +27,8 @@ public class SingletonHandler : Node {
 		
 		minecraftClient = new MinecraftClient();
 		AddChild(minecraftClient);
+
+		GD.Print("Created atlas " + TextureAtlas.instance.atlas.GetSize());
 	}
 
 	public MinecraftClient newMinecraftClient() {

@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://objects/HUD.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/renderer/ChunkRenderer.cs" type="Script" id=3]
+[ext_resource path="res://scripts/world/ChunkHandler.cs" type="Script" id=4]
 
 [sub_resource type="Environment" id=1]
 background_mode = 1
@@ -33,6 +34,7 @@ extents = Vector3( 25, 0.01, 25 )
 [node name="Testing_Scene" type="Spatial"]
 
 [node name="Chunks" type="Node" parent="."]
+script = ExtResource( 4 )
 
 [node name="Chunk" type="MeshInstance" parent="Chunks"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5 )

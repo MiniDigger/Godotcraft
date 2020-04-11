@@ -43,9 +43,11 @@ public class GameClient {
 		});
 		minecraftClient.addPacketListener<ChatMessageServerPacket>(packet => {
 			GD.Print("Got message " + packet.message);
-			
 		});
 		minecraftClient.addPacketListener<PluginMessageServerPacket>(packet => { GD.Print("Got plugin message in channel " + packet.channel); });
+		minecraftClient.addPacketListener<ChunkDataPacket>(packet => {
+			SingletonHandler.instance.chunkHandler.handle(packet);
+		});
 	}
 
 	public void serverListPing(String host, ushort port, Action<StatusResponsePacket.StatusResponse> callback) {

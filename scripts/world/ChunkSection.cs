@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Godot;
 using Godotcraft.scripts.network.protocol;
 
 namespace Godotcraft.scripts.world {
@@ -8,7 +10,7 @@ public class ChunkSection {
 	private int[] palette;
 	private long[] data;
 
-	private int size;
+	public int size { get; private set; }
 	private long maxEntryValue;
 
 	public ChunkSection() {
@@ -41,7 +43,8 @@ public class ChunkSection {
 
 	public int get(int index) {
 		if (index < 0 || index > size - 1) {
-			throw new IndexOutOfRangeException();
+			// throw new IndexOutOfRangeException();
+			return 0;
 		}
 
 		int bitIndex = index * bitsPerBlock;
@@ -59,6 +62,26 @@ public class ChunkSection {
 
 	public bool isEmpty() {
 		return false;
+	}
+
+	public void read(DataTypes dataTypes, List<byte> dataBytes) {
+		blockCount = dataTypes.ReadNextShort(dataBytes);
+		bitsPerBlock = dataTypes.ReadNextByte(dataBytes);
+		if (bitsPerBlock <= 0) bitsPerBlock = 4;
+		palette = new int[dataTypes.ReadNextVarInt(dataBytes)];
+		for (var i = 0; i < palette.Length; i++) {
+			palette[i] = dataTypes.ReadNextVarInt(dataBytes);
+		}
+		data = new long[dataTypes.ReadNextVarInt(dataBytes)];
+		if (data.Length == 0 || bitsPerBlock == 0) {
+			size = 0;
+		}
+		else {
+			size = data.Length * 64 / bitsPerBlock;
+		}
+		for (var i = 0; i < data.Length; i++) {
+			data[i] = dataTypes.ReadNextLong(dataBytes);
+		}
 	}
 }
 }

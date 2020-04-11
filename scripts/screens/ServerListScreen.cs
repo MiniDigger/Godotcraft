@@ -23,6 +23,8 @@ public class ServerListScreen : Control {
 	private RandomNumberGenerator random;
 
 	public override void _Ready() {
+		Input.SetMouseMode(Input.MouseMode.Visible);
+
 		Button addButton = GetNode("CenterContainer/VBoxContainer/ButtonBar/Add") as Button;
 		Button backButton = GetNode("CenterContainer/VBoxContainer/ButtonBar/Back") as Button;
 		serverList = GetNode("CenterContainer/VBoxContainer/Servers") as VBoxContainer;

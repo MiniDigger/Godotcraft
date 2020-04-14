@@ -61,7 +61,7 @@ public class ChunkSection {
 	}
 
 	public bool isEmpty() {
-		return false;
+		return blockCount == 0;
 	}
 
 	public void read(DataTypes dataTypes, List<byte> dataBytes) {

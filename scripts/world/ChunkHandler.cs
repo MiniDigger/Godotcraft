@@ -15,25 +15,37 @@ public class ChunkHandler : Spatial {
 	private readonly BlockingCollection<Node> spawningQueue = new BlockingCollection<Node>();
 
 	private bool shouldQuit = false;
-	private Thread creationThread;
-
+	private int threadTarget = 10;
+	private List<Thread> creationThreads = new List<Thread>();
+	
 	public override void _Ready() {
 		SingletonHandler.instance.chunkHandler = this;
 
-		creationThread = new Thread(doCreation);
-		creationThread.Start();
+		// initial thread
+		startNewThread();
 	}
 
 	public void handle(ChunkDataPacket packet) {
 		if (packet.chunkData.getSectionCount() == 0) return;
 		creationQueue.Add(packet);
-		GD.Print("handle, size is now " + creationQueue.Count);
+		GD.Print("add new packet, size is now " + creationQueue.Count);
+	}
+
+	private bool shouldStartNewThread() {
+		return creationThreads.Count >= threadTarget;
+	}
+
+	private void startNewThread() {
+		Thread creationThread = new Thread(doCreation);
+		creationThread.Start();
+		creationThreads.Add(creationThread);
 	}
 
 	public void doCreation() {
 		while (IsProcessing() && !shouldQuit) {
 			ChunkDataPacket packet;
 			if (creationQueue.TryTake(out packet, 10)) {
+				var watch = System.Diagnostics.Stopwatch.StartNew();
 				if (packet.chunkData.getSectionCount() == 0) continue;
 				if (GetNodeOrNull<Node>("Chunk" + packet.chunkPos) != null) {
 					GD.Print("Chunk already existed!");
@@ -42,13 +54,14 @@ public class ChunkHandler : Spatial {
 				Node chunk = new Node {Name = "Chunk" + packet.chunkPos};
 				for (var i = 0; i < packet.chunkData.getSectionCount(); i++) {
 					ChunkSection section = packet.chunkData.getSection(i);
+					if(section.isEmpty()) continue;
 					ChunkRenderer renderer = new ChunkRenderer {
 						Translation = calcPos(packet.chunkPos, i),
 						Name = "Section@" + i
 					};
 					Timeout.TimeoutAfter(() => {
 						bool created = renderer.createMesh(section);
-						if (created) renderer.createCollision();
+						// if (created) renderer.createCollision();
 						return created;
 					}, TimeSpan.FromSeconds(1));
 					chunk.AddChild(renderer);
@@ -57,6 +70,14 @@ public class ChunkHandler : Spatial {
 				if (!spawningQueue.TryAdd(chunk, 100)) {
 					GD.Print("failed");
 				}
+
+				// create new threads delayed
+				if (shouldStartNewThread()) {
+					startNewThread();
+				}
+				
+				watch.Stop();
+				GD.Print("handled packet, size is now " + creationQueue.Count + ", took " + watch.ElapsedMilliseconds);
 			}
 		}
 
@@ -67,9 +88,11 @@ public class ChunkHandler : Spatial {
 		if (what == MainLoop.NotificationWmQuitRequest) {
 			GD.Print("request quit");
 			shouldQuit = true;
-			creationThread.Interrupt();
-			creationThread.Abort();
-			GD.Print("Alive? " + creationThread.IsAlive);
+			foreach (var creationThread in creationThreads) {
+				creationThread.Interrupt();
+				creationThread.Abort();
+				GD.Print("Alive? " + creationThread.IsAlive);
+			}
 		}
 	}
 

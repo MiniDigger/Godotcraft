@@ -15,7 +15,7 @@ public class ChunkDataPacket : Packet {
 		chunkPos = new Vector2(dataTypes.ReadNextInt(data), dataTypes.ReadNextInt(data));
 		fullChunk = dataTypes.ReadNextBool(data);
 		chunkData = new ChunkData();
-		chunkData.read(dataTypes, data);
+		chunkData.read(dataTypes, data, fullChunk);
 		int num = dataTypes.ReadNextVarInt(data);
 		blockEntities = new List<Dictionary<string, object>>();
 		for (var i = 0; i < num; i++) {

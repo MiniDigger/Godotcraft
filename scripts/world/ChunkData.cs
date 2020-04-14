@@ -63,7 +63,7 @@ public class ChunkData {
 		return sections.Length;
 	}
 
-	public void read(DataTypes dataTypes, List<byte> data) {
+	public void read(DataTypes dataTypes, List<byte> data, bool fullChunk) {
 		int primBitMask = dataTypes.ReadNextVarInt(data);
 		var heightMapNbt = dataTypes.ReadNextNbt(data);
 		if (heightMapNbt.ContainsKey("MOTION_BLOCKING")) {
@@ -73,14 +73,17 @@ public class ChunkData {
 				// heightMap[i] = (long) map[i];
 			}
 		}
-		
-		int biomesSize = dataTypes.ReadNextVarInt(data);
-		biomes = new int[biomesSize];
-		for (var i = 0; i < biomesSize; i++) {
-			biomes[i] = dataTypes.ReadNextInt(data);
+
+		if (fullChunk) {
+			int biomesSize = dataTypes.ReadNextVarInt(data);
+			biomes = new int[biomesSize];
+			for (var i = 0; i < biomesSize; i++) {
+				biomes[i] = dataTypes.ReadNextInt(data);
+			}
 		}
 
 		int dataSize = dataTypes.ReadNextVarInt(data);
+		// byte[] chunkData = dataTypes.ReadData(dataSize, data);
 		int sectionCount = numberOfSetBits(primBitMask);
 		sections = new ChunkSection[sectionCount];
 		for (var i = 0; i < sectionCount; i++) {

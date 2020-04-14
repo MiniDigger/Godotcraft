@@ -33,7 +33,7 @@ public class ChunkRenderer : MeshInstance {
 				for (var z = 0; z < 16; z++) {
 					// get data and check if air
 					BlockState data = getData(section, x, y, z);
-					if (data == BlockRegistry.AIR) {
+					if (data.transparent) {
 						continue;
 					}
 
@@ -41,17 +41,17 @@ public class ChunkRenderer : MeshInstance {
 
 					// culling
 					bool renderFront = true;
-					if (z < 16 - 1) renderFront = getData(section, x, y, z + 1) == BlockRegistry.AIR;
+					if (z < 16 - 1) renderFront = getData(section, x, y, z + 1).transparent;
 					bool renderBack = true;
-					if (z > 0) renderBack = getData(section, x, y, z - 1) == BlockRegistry.AIR;
+					if (z > 0) renderBack = getData(section, x, y, z - 1).transparent;
 					bool renderRight = true;
-					if (x < 16 - 1) renderRight = getData(section, x + 1, y, z) == BlockRegistry.AIR;
+					if (x < 16 - 1) renderRight = getData(section, x + 1, y, z).transparent;
 					bool renderLeft = true;
-					if (x > 0) renderLeft = getData(section, x - 1, y, z)  == BlockRegistry.AIR;
+					if (x > 0) renderLeft = getData(section, x - 1, y, z).transparent;
 					bool renderTop = true;
-					if (y < 16 - 1) renderTop = getData(section, x, y + 1, z) == BlockRegistry.AIR;
+					if (y < 16 - 1) renderTop = getData(section, x, y + 1, z).transparent;
 					bool renderBot = true;
-					if (y > 0) renderBot = getData(section, x, y - 1, z)  == BlockRegistry.AIR;
+					if (y > 0) renderBot = getData(section, x, y - 1, z).transparent;
 
 					// add cube
 					createCube(x, y, z, data, renderFront, renderBack, renderRight, renderLeft, renderTop, renderBot);
@@ -117,7 +117,7 @@ public class ChunkRenderer : MeshInstance {
 
 	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, BlockState data) {
 		// UVMap uv = UVMap.getMap("aa_test");
-		UVMap uv = UVMap.getMap("dirt");
+		UVMap uv = UVMap.getMap(data.name);
 		// if (data == 2) {
 		// 	uv = UVMap.getMap("bedrock");
 		// }

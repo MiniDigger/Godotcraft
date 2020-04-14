@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Godot;
+﻿using System.Collections.Generic;
 using Godotcraft.scripts.network.protocol;
 using Godotcraft.scripts.world.block;
 
@@ -20,7 +18,7 @@ public class IndirectPalette : Palette{
 
 	public BlockState StateForId(uint id) {
 		if (id >= idToState.Count) {
-			GD.Print("Couldn't find state for id " + id + " (palette size is " + idToState.Count + ")");
+			// GD.Print("Couldn't find state for id " + id + " (palette size is " + idToState.Count + ")");
 			return BlockRegistry.AIR;
 		}
 		return idToState[id];

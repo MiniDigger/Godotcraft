@@ -151,7 +151,7 @@ public class MinecraftClient : Node {
 			type = PacketType.of(packetId, currentState, PacketDirection.TO_CLIENT);
 		}
 		catch (KeyNotFoundException e) {
-			GD.Print($"Coulnt find a packet type for id 0x{packetId:X} and state {currentState}");
+			// GD.Print($"Coulnt find a packet type for id 0x{packetId:X} and state {currentState}");
 			return null;
 		}
 

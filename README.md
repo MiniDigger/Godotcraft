@@ -8,8 +8,15 @@ If you want to run it yourself, you need to download the minecraft assets and pu
 Its located at `C:\Users\Martin\AppData\Roaming\Godot\app_userdata\Godotcraft` for me.  
 InventiveTalent has a repo with all the stuff: https://api.github.com/repos/InventivetalentDev/minecraft-assets/zipball/1.15.2
 
+# Data
+
+You also need some data, you can generate those from a vanilla minecraft server (forks work too).  
+`java -cp minecraft_server.jar net.minecraft.data.Main --all`  
+You then need to put the data and reports folder into a mcdata folder into the user folder (see above)
+
 # Status
 
+14.04.2020: Rewritten chunk rendering, now its actually working (kinda) https://i.imgur.com/0liIc2B.png
 11.04.2020: Chunk rendering? Kinda? Maybe? https://i.imgur.com/sumfigG.png  
 10.04.2020: Movement! https://streamable.com/951xc2  
 09.04.2020: More rendering, better culling, texture atlas! https://i.imgur.com/3yl7z1Q.png  

@@ -71,6 +71,22 @@ public class TextureAtlas {
 
 		end:
 
+		// we need to implement "fancy" blockstransparent
+		addAlias("end_portal", "end_portal_frame_side");
+		addAlias("furnance", "furnance_front");
+		addAlias("wall_torch", "torch");
+		addAlias("smooth_stone_slab", "smooth_stone_slab");
+		addAlias("stone_brick_slab", "stone_bricks");
+		addAlias("spruce_fence", "spruce_planks");
+		addAlias("bone_block", "bone_block_side");
+		addAlias("grass_block", "grass_block_side");
+		// fixes
+		addAlias("water", "debug");
+		addAlias("water_block", "debug");
+		addAlias("lava", "debug");
+		addAlias("lava_block", "debug");
+
+
 		ImageTexture imageTexture = new ImageTexture();
 		imageTexture.CreateFromImage(texture);
 		imageTexture.Flags &= ~(uint)Texture.FlagsEnum.Filter;
@@ -78,6 +94,10 @@ public class TextureAtlas {
 		texture.SavePng("user://test.png");
 
 		return new AtlasTexture {Atlas = imageTexture, Region = new Rect2(0,0,atlasWidth, atlasHeight)};
+	}
+
+	private void addAlias(string name, string alias) {
+		new UVMap(name, UVMap.getMap(alias).uvMap).register();
 	}
 
 	private List<string> getImages(Directory textureDir) {

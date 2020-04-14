@@ -4,7 +4,7 @@ using Godot;
 namespace Godotcraft.scripts.renderer {
 public class UVMap {
 
-	private static readonly List<UVMap> maps = new List<UVMap>();
+	private static readonly Dictionary<string, UVMap> maps = new Dictionary<string, UVMap>();
 	
 	public string name { get; }
 	public Vector2[] uvMap { get; }
@@ -15,18 +15,18 @@ public class UVMap {
 	}
 
 	public void register() {
-		maps.Add(this);
+		maps.Add(name, this);
 	}
 
 	public static UVMap getMap(string name) {
-		foreach (var map in maps) {
-			if (map.name.Equals(name)) {
-				return map;
-			}
+		UVMap map;
+		maps.TryGetValue(name, out map);
+		if (map != null) {
+			return map;
 		}
 
-		GD.Print("Didnt find UVMap for " + name);
-		return maps[0];
+		// GD.Print("Didnt find UVMap for " + name);
+		return maps["debug"];
 	}
 
 	public override string ToString() {

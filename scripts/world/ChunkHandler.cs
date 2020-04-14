@@ -28,7 +28,7 @@ public class ChunkHandler : Spatial {
 	public void handle(ChunkDataPacket packet) {
 		if (packet.chunkData.getSectionCount() == 0) return;
 		creationQueue.Add(packet);
-		GD.Print("add new packet, size is now " + creationQueue.Count);
+		// GD.Print("add new packet, size is now " + creationQueue.Count);
 	}
 
 	private bool shouldStartNewThread() {
@@ -77,7 +77,7 @@ public class ChunkHandler : Spatial {
 				}
 				
 				watch.Stop();
-				GD.Print("handled packet, size is now " + creationQueue.Count + ", took " + watch.ElapsedMilliseconds);
+				// GD.Print("handled packet, size is now " + creationQueue.Count + ", took " + watch.ElapsedMilliseconds);
 			}
 		}
 

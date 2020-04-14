@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Godot;
 
 namespace Godotcraft.scripts.network.protocol {
@@ -16,6 +17,10 @@ public class MinecraftClient : Node {
 	private readonly Dictionary<PacketType, List<object>> packetListeners = new Dictionary<PacketType, List<object>>();
 
 	public int compressionThreshold { get; set; }
+
+	private bool countPacketSize = false;
+	private long totalCount;
+	private long totalSize;
 
 	public override void _Ready() {
 		client = new StreamPeerTCP();
@@ -166,6 +171,15 @@ public class MinecraftClient : Node {
 
 		if (data?.Count != 0) {
 			GD.Print($"Error while reading packet {type}: Got {data?.Count} bytes too much");
+		}
+
+		if (countPacketSize) {
+			Interlocked.Add(ref totalCount, 1);
+			Interlocked.Add(ref totalSize, len);
+
+			if (Interlocked.Read(ref totalCount) % 10 == 0) {
+				GD.Print($"Total count {Interlocked.Read(ref totalCount)}, total size {Interlocked.Read(ref totalSize)}");
+			}
 		}
 		
 		return packet;

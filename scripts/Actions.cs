@@ -9,6 +9,7 @@ public class Actions {
 	public static readonly string movement_walk_backwards = "movement_walk_backwards";
 	public static readonly string movement_walk_forwards = "movement_walk_forwards";
 	public static readonly string movement_jump = "movement_jump";
+	public static readonly string movement_sneak = "movement_sneak";
 	
 	public static readonly string ui_up = "ui_up";
 	public static readonly string ui_down = "ui_down";

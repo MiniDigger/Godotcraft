@@ -4,6 +4,7 @@ using Godotcraft.scripts;
 using Console = Godotcraft.scripts.objects.Console;
 
 // taken from https://github.com/turtlewit/VineCrawler/blob/master/PlayerNew.gd
+// flying by minidigger
 public class Player : KinematicBody {
 	[Export] public float mouseSensitivity = .1f;
 
@@ -28,6 +29,7 @@ public class Player : KinematicBody {
 	private Vector3 playerVelocity;
 
 	private bool wishJump;
+	private bool flying;
 
 	private bool touchingGround;
 
@@ -45,15 +47,23 @@ public class Player : KinematicBody {
 
 	public override void _PhysicsProcess(float delta) {
 		queueJump();
-		if (touchingGround) {
+		if (touchingGround || flying) {
 			groundMove(delta);
 		}
 		else {
 			airMove(delta);
 		}
 
+		if (flying) {
+			flyControls(delta);
+		}
+
 		playerVelocity = MoveAndSlide(playerVelocity, Vector3.Up);
 		touchingGround = IsOnFloor();
+
+		if (touchingGround && flying) {
+			flying = false;
+		}
 	}
 
 	private void snap_to_ground(Vector3 from) {
@@ -65,6 +75,16 @@ public class Player : KinematicBody {
 			var transform = GlobalTransform;
 			transform.origin.y = ((Vector3) result["position"]).y;
 			GlobalTransform = transform;
+		}
+	}
+
+	private void flyControls(float delta) {
+		if (Input.IsActionPressed(Actions.movement_jump)) {
+			playerVelocity.y += jumpSpeed;
+		}
+
+		if (Input.IsActionPressed(Actions.movement_sneak)) {
+			playerVelocity.y -= jumpSpeed;
 		}
 	}
 
@@ -80,7 +100,7 @@ public class Player : KinematicBody {
 	}
 
 	private void queueJump() {
-		if (Input.IsActionJustPressed(Actions.movement_jump) && !wishJump && !Console.instance.isConsoleShown) {
+		if (Input.IsActionJustPressed(Actions.movement_jump) && !Console.instance.isConsoleShown) {
 			wishJump = true;
 		}
 
@@ -123,7 +143,12 @@ public class Player : KinematicBody {
 			airControl(wishDir, wishSpeed2, delta);
 		}
 
-		playerVelocity.y -= gravity * delta;
+		if (wishJump) {
+			flying = true;
+		}
+		else {
+			playerVelocity.y -= gravity * delta;
+		}
 	}
 
 	private void airControl(Vector3 wishDir, float wishSpeed, float delta) {
@@ -195,7 +220,7 @@ public class Player : KinematicBody {
 		float speed = vec.Length();
 		var drop = 0.0f;
 
-		if (touchingGround) {
+		if (touchingGround || flying) {
 			var control = speed < runDeacceleration ? runDeacceleration : speed;
 			drop = control * friction * delta * t;
 		}

@@ -11,6 +11,7 @@ public class SetSlotPacket : Packet {
 		windowId = dataTypes.ReadNextByte(data);
 		slot = dataTypes.ReadNextShort(data);
 		
+		data.Clear();
 		// TODO read actual data
 	}
 

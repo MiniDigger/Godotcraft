@@ -1,5 +1,6 @@
 ﻿using Godot;
 using Godotcraft.scripts.world;
+using Godotcraft.scripts.world.block;
 using Console = Godotcraft.scripts.objects.Console;
 
 namespace Godotcraft.scripts.renderer {
@@ -31,8 +32,8 @@ public class ChunkRenderer : MeshInstance {
 			for (var y = 0; y < 16; y++) {
 				for (var z = 0; z < 16; z++) {
 					// get data and check if air
-					int data = getData(section, x, y, z);
-					if (data == 0) {
+					BlockState data = getData(section, x, y, z);
+					if (data == BlockRegistry.AIR) {
 						continue;
 					}
 
@@ -40,17 +41,17 @@ public class ChunkRenderer : MeshInstance {
 
 					// culling
 					bool renderFront = true;
-					if (z < 16 - 1) renderFront = getData(section, x, y, z + 1) == 0;
+					if (z < 16 - 1) renderFront = getData(section, x, y, z + 1) == BlockRegistry.AIR;
 					bool renderBack = true;
-					if (z > 0) renderBack = getData(section, x, y, z - 1) == 0;
+					if (z > 0) renderBack = getData(section, x, y, z - 1) == BlockRegistry.AIR;
 					bool renderRight = true;
-					if (x < 16 - 1) renderRight = getData(section, x + 1, y, z) == 0;
+					if (x < 16 - 1) renderRight = getData(section, x + 1, y, z) == BlockRegistry.AIR;
 					bool renderLeft = true;
-					if (x > 0) renderLeft = getData(section, x - 1, y, z) == 0;
+					if (x > 0) renderLeft = getData(section, x - 1, y, z)  == BlockRegistry.AIR;
 					bool renderTop = true;
-					if (y < 16 - 1) renderTop = getData(section, x, y + 1, z) == 0;
+					if (y < 16 - 1) renderTop = getData(section, x, y + 1, z) == BlockRegistry.AIR;
 					bool renderBot = true;
-					if (y > 0) renderBot = getData(section, x, y - 1, z) == 0;
+					if (y > 0) renderBot = getData(section, x, y - 1, z)  == BlockRegistry.AIR;
 
 					// add cube
 					createCube(x, y, z, data, renderFront, renderBack, renderRight, renderLeft, renderTop, renderBot);
@@ -68,11 +69,11 @@ public class ChunkRenderer : MeshInstance {
 		return true;
 	}
 
-	private int getData(ChunkSection section, int x, int y, int z) {
-		return section.size == 0 ? 0 : section.get(ChunkData.index(x, y, z));
+	private BlockState getData(ChunkSection section, int x, int y, int z) {
+		return section.isEmpty() ? BlockRegistry.AIR : section.get(x,y,z);
 	}
 
-	public void createCube(int x, int y, int z, int data, bool renderFront, bool renderBack, bool renderRight, bool renderLeft, bool renderTop,
+	public void createCube(int x, int y, int z, BlockState data, bool renderFront, bool renderBack, bool renderRight, bool renderLeft, bool renderTop,
 		bool renderBot) {
 		var p001 = new Vector3(x - CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
 		var p101 = new Vector3(x + CUBE_SIZE, y - CUBE_SIZE, z + CUBE_SIZE);
@@ -114,15 +115,15 @@ public class ChunkRenderer : MeshInstance {
 		}
 	}
 
-	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, int data) {
+	private void addTri(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, BlockState data) {
 		// UVMap uv = UVMap.getMap("aa_test");
 		UVMap uv = UVMap.getMap("dirt");
-		if (data == 2) {
-			uv = UVMap.getMap("bedrock");
-		}
-		else if (data == 3) {
-			uv = UVMap.getMap("jungle_planks");
-		}
+		// if (data == 2) {
+		// 	uv = UVMap.getMap("bedrock");
+		// }
+		// else if (data == 3) {
+		// 	uv = UVMap.getMap("jungle_planks");
+		// }
 
 		tool.AddUv(uv.uvMap[0]);
 		tool.AddVertex(p4);

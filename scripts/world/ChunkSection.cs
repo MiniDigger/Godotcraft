@@ -1,63 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using Godot;
+﻿using System.Collections.Generic;
 using Godotcraft.scripts.network.protocol;
+using Godotcraft.scripts.world.block;
+using Godotcraft.scripts.world.palette;
 
 namespace Godotcraft.scripts.world {
 public class ChunkSection {
-	private short blockCount = 16 * 16 * 16;
-	private int bitsPerBlock = 14; // direct, no palette, for now
-	private int[] palette;
-	private long[] data;
+	private short blockCount;
+	private byte bitsPerBlock;
+	private long[] data = new long[0];
+	private uint individualValueMask;
+	private Palette palette;
 
-	public int size { get; private set; }
-	private long maxEntryValue;
-
-	public ChunkSection() {
-		data = new long[(16 * 16 * 16) * bitsPerBlock / 64];
-
-		size = data.Length * 64 / bitsPerBlock;
-		maxEntryValue = (1L << bitsPerBlock) - 1;
+	public void set(int x, int y, int z, BlockState state) {
+		set((y * 16 + z) * 16 + x, state);
 	}
 
-	public void set(int index, int value) {
-		if (index < 0 || index > size - 1) {
-			throw new IndexOutOfRangeException();
-		}
+	public void set(int index, BlockState state) {
+		int startLong = (index * bitsPerBlock) / 64;
+		int startOffset = (index * bitsPerBlock) % 64;
+		int endLong = ((index + 1) * bitsPerBlock - 1) / 64;
 
-		if (value < 0 || value > maxEntryValue) {
-			throw new ArgumentException("Value cannot be outside of accepted range.");
-		}
+		long value = palette.IdForState(state);
+		value &= individualValueMask;
 
-		int bitIndex = index * bitsPerBlock;
-		int startIndex = bitIndex / 64;
-		int endIndex = ((index + 1) * bitsPerBlock - 1) / 64;
-		int startBitSubIndex = bitIndex % 64;
-		data[startIndex] = data[startIndex] & ~(maxEntryValue << startBitSubIndex) |
-		                   ((long) value & maxEntryValue) << startBitSubIndex;
-		if (startIndex != endIndex) {
-			int endBitSubIndex = 64 - startBitSubIndex;
-			data[endIndex] = (int) ((uint) data[endIndex] >> endBitSubIndex) << endBitSubIndex | ((long) value & maxEntryValue) >> endBitSubIndex;
+		data[startLong] |= (value << startOffset);
+
+		if (startLong != endLong) {
+			data[endLong] = (value >> (64 - startOffset));
 		}
 	}
 
-	public int get(int index) {
-		if (index < 0 || index > size - 1) {
-			// throw new IndexOutOfRangeException();
-			return 0;
-		}
+	public BlockState get(int x, int y, int z) {
+		return get((y * 16 + z) * 16 + x);
+	}
 
-		int bitIndex = index * bitsPerBlock;
-		int startIndex = bitIndex / 64;
-		int endIndex = ((index + 1) * bitsPerBlock - 1) / 64;
-		int startBitSubIndex = bitIndex % 64;
-		if (startIndex == endIndex) {
-			return (int) ((uint) data[startIndex] >> startBitSubIndex & maxEntryValue);
+	public BlockState get(int blockNumber) {
+		int startLong = blockNumber * bitsPerBlock / 64;
+		int startOffset = blockNumber * bitsPerBlock % 64;
+		int endLong = ((blockNumber + 1) * bitsPerBlock - 1) / 64;
+
+		uint blockId;
+		if (startLong == endLong) {
+			blockId = (uint) (data[startLong] >> startOffset);
 		}
 		else {
-			int endBitSubIndex = 64 - startBitSubIndex;
-			return (int) (((uint) data[startIndex] >> startBitSubIndex | data[endIndex] << endBitSubIndex) & maxEntryValue);
+			int endOffset = 64 - startOffset;
+			blockId = (uint) (data[startLong] >> startOffset | data[endLong] << endOffset);
 		}
+
+		blockId &= individualValueMask;
+
+		// data should always be valid for the palette
+		// If you're reading a power of 2 minus one (15, 31, 63, 127, etc...) that's out of bounds,
+		// you're probably reading light data instead
+
+		return palette.StateForId(blockId);
 	}
 
 	public bool isEmpty() {
@@ -67,20 +64,28 @@ public class ChunkSection {
 	public void read(DataTypes dataTypes, List<byte> dataBytes) {
 		blockCount = dataTypes.ReadNextShort(dataBytes);
 		bitsPerBlock = dataTypes.ReadNextByte(dataBytes);
-		if (bitsPerBlock <= 0) bitsPerBlock = 4;
-		palette = new int[dataTypes.ReadNextVarInt(dataBytes)];
-		for (var i = 0; i < palette.Length; i++) {
-			palette[i] = dataTypes.ReadNextVarInt(dataBytes);
-		}
-		data = new long[dataTypes.ReadNextVarInt(dataBytes)];
-		if (data.Length == 0 || bitsPerBlock == 0) {
-			size = 0;
-		}
-		else {
-			size = data.Length * 64 / bitsPerBlock;
-		}
+
+		palette = ChoosePalette(bitsPerBlock);
+		palette.Read(dataTypes, dataBytes);
+
+		individualValueMask = (uint) ((1 << bitsPerBlock) - 1);
+
+		int dataSize = dataTypes.ReadNextVarInt(dataBytes);
+		data = new long[dataSize];
 		for (var i = 0; i < data.Length; i++) {
 			data[i] = dataTypes.ReadNextLong(dataBytes);
+		}
+	}
+
+	private Palette ChoosePalette(byte bitsPerBlock) {
+		if (bitsPerBlock <= 4) {
+			return new IndirectPalette(4);
+		}
+		else if (bitsPerBlock <= 8) {
+			return new IndirectPalette(bitsPerBlock);
+		}
+		else {
+			return new DirectPalette();
 		}
 	}
 }

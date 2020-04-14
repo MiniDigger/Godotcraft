@@ -54,16 +54,16 @@ public class ChunkHandler : Spatial {
 				Node chunk = new Node {Name = "Chunk" + packet.chunkPos};
 				for (var i = 0; i < packet.chunkData.getSectionCount(); i++) {
 					ChunkSection section = packet.chunkData.getSection(i);
-					if(section.isEmpty()) continue;
+					if(section == null || section.isEmpty()) continue;
 					ChunkRenderer renderer = new ChunkRenderer {
 						Translation = calcPos(packet.chunkPos, i),
 						Name = "Section@" + i
 					};
-					Timeout.TimeoutAfter(() => {
+					// Timeout.TimeoutAfter(() => {
 						bool created = renderer.createMesh(section);
 						// if (created) renderer.createCollision();
-						return created;
-					}, TimeSpan.FromSeconds(1));
+						// return created;
+					// }, TimeSpan.FromSeconds(1));
 					chunk.AddChild(renderer);
 				}
 

@@ -127,9 +127,14 @@
     <Compile Include="scripts\state\SingletonHandler.cs" />
     <Compile Include="scripts\state\StateHandler.cs" />
     <Compile Include="scripts\util\Timeout.cs" />
+    <Compile Include="scripts\world\block\BlockRegistry.cs" />
+    <Compile Include="scripts\world\block\BlockState.cs" />
     <Compile Include="scripts\world\ChunkData.cs" />
     <Compile Include="scripts\world\ChunkHandler.cs" />
     <Compile Include="scripts\world\ChunkSection.cs" />
+    <Compile Include="scripts\world\palette\DirectPalette.cs" />
+    <Compile Include="scripts\world\palette\IndirectPalette.cs" />
+    <Compile Include="scripts\world\palette\Palette.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />

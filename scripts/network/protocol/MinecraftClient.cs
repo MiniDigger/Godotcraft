@@ -160,8 +160,12 @@ public class MinecraftClient : Node {
 			packet.read(dataTypes, data);
 		}
 		catch (Exception ex) {
-			GD.Print($"Error while reading packet {type}: {ex.GetType().Name}: {ex.Message}");
+			GD.Print($"Error while reading packet {type}: \n{ex.GetType().Name}: {ex.Message}");
 			GD.Print(ex.StackTrace);
+		}
+
+		if (data?.Count != 0) {
+			GD.Print($"Error while reading packet {type}: Got {data?.Count} bytes too much");
 		}
 		
 		return packet;

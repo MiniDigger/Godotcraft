@@ -16,7 +16,7 @@ You then need to put the data and reports folder into a mcdata folder into the u
 
 # Status
 
-14.04.2020: Rewritten chunk rendering, now its actually working (kinda) https://i.imgur.com/0liIc2B.png
+14.04.2020: Rewritten chunk rendering, now its actually working (kinda) https://i.imgur.com/0liIc2B.png  
 11.04.2020: Chunk rendering? Kinda? Maybe? https://i.imgur.com/sumfigG.png  
 10.04.2020: Movement! https://streamable.com/951xc2  
 09.04.2020: More rendering, better culling, texture atlas! https://i.imgur.com/3yl7z1Q.png  

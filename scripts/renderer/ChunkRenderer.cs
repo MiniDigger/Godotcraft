@@ -12,6 +12,7 @@ public class ChunkRenderer : MeshInstance {
 	public override void _Ready() {
 		VisualServer.SetDebugGenerateWireframes(true);
 		MaterialOverride = new SpatialMaterial {AlbedoTexture = TextureAtlas.instance.atlas, ParamsCullMode = SpatialMaterial.CullMode.Back};
+		UseInBakedLight = true;
 	}
 
 	public void createCollision() {
